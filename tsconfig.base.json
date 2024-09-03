@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@afro-hack/errors": ["libs/shared/api-errors/src/index.ts"]
+      "@afro-hack/api/errors": ["libs/api/errors/src/index.ts"],
+      "@afro-hack/types": ["libs/shared/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

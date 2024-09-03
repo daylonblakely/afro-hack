@@ -2,7 +2,9 @@ import express, { Request, Response } from 'express';
 import morgan from 'morgan';
 import 'express-async-errors';
 import { json } from 'body-parser';
-import { NotFoundError } from '@afro-hack/errors';
+import { NotFoundError } from '@afro-hack/api/errors';
+
+import promptRouter from './prompts/routes';
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use(json());
 app.get('/', (_req: Request, res: Response) => {
   res.send('server: hello!');
 });
+
+app.use('/prompt', promptRouter);
 
 // Catch-all route for 404 errors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
