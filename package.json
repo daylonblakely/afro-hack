@@ -2,7 +2,10 @@
   "name": "@afro-hack/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:dev": "concurrently \"npx nx run mobile:run-android\" \"npx nx run server:serve-nodemon\"",
+    "start:api": "npx nx run server:serve-nodemon"
+  },
   "private": true,
   "dependencies": {
     "axios": "^1.6.0",
@@ -42,6 +45,7 @@
     "@types/react": "~18.2.45",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^7.16.0",
+    "concurrently": "^8.2.2",
     "detox": "~20.18.1",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.0.0",
