@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import morgan from 'morgan';
 import 'express-async-errors';
 import { json } from 'body-parser';
-import { NotFoundError } from '@afro-hack/api/errors';
+import { NotFoundError } from './errors/not-found-error';
 
 import promptRouter from './prompts/routes';
 
