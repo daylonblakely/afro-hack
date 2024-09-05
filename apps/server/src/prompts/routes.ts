@@ -1,14 +1,17 @@
 import { Router, Request, Response } from 'express';
-import { IPrompt } from '@afro-hack/types';
+import Prompt from './models/Prompt';
+
+import { NotFoundError } from '../errors/not-found-error';
 
 const router = Router();
 
-router.get('/latest', (req: Request, res: Response) => {
-  const p: IPrompt = {
-    prompt: 'hahaha',
-    createdTimestamp: new Date(),
-  };
-  res.send(p);
+router.get('/latest', async (req: Request, res: Response) => {
+  const latestPrompt = await Prompt.findOne().sort({ createdDate: -1 });
+
+  if (!latestPrompt) {
+    throw new NotFoundError();
+  }
+  res.status(200).send(latestPrompt);
 });
 
 export default router;
