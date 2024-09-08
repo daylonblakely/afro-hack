@@ -6,3 +6,13 @@ export interface IPrompt extends Document {
   consensus?: string;
   createdDate: Date;
 }
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password?: string;
+  googleId?: string;
+  facebookId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

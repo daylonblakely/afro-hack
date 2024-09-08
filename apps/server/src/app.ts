@@ -5,6 +5,7 @@ import { json } from 'body-parser';
 import { NotFoundError } from './errors/not-found-error';
 
 import promptRouter from './prompts/routes';
+import authRouter from './auth/routes';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 app.use('/prompt', promptRouter);
+app.use('/auth', authRouter);
 
 // Catch-all route for 404 errors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
