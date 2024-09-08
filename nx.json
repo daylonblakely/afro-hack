@@ -72,6 +72,17 @@
         "runIosTargetName": "run-ios",
         "runAndroidTargetName": "run-android"
       }
+    },
+    {
+      "plugin": "@nx/playwright/plugin",
+      "options": {
+        "targetName": "e2e"
+      }
     }
-  ]
+  ],
+  "targetDefaults": {
+    "e2e-ci--**/*": {
+      "dependsOn": ["^export"]
+    }
+  }
 }
