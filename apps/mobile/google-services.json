@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1040833172816",
+    "project_id": "afro-hack-cc086",
+    "storage_bucket": "afro-hack-cc086.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040833172816:android:7ef8c25f3f03b772d00855",
+        "android_client_info": {
+          "package_name": "com.afro_hack.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1ododEyKMIrquEz12YnZX-MWhCIBQwaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,10 +9,33 @@
     "react-native": "*",
     "expo": "*",
     "react-native-svg": "*",
-    "react-native-web": "*"
+    "react-native-web": "*",
+    "react": "18.2.0",
+    "jest-expo": "*",
+    "@nx/devkit": "*",
+    "@nx/eslint": "*",
+    "@nx/jest": "*",
+    "@nx/js": "*",
+    "@nx/react": "*",
+    "@nx/web": "*",
+    "@nx/webpack": "*",
+    "chalk": "*",
+    "enhanced-resolve": "*",
+    "fs-extra": "*",
+    "metro-resolver": "*",
+    "node-fetch": "*",
+    "tsconfig-paths": "*",
+    "tslib": "*",
+    "@expo/metro-config": "*",
+    "react-native-svg-transformer": "*",
+    "@react-native-google-signin/google-signin": "*",
+    "expo-dev-client": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp package-lock.json apps/mobile",
-    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/mobile"
-  }
+    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/mobile",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "devDependencies": {}
 }
