@@ -1,16 +1,14 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
-  //   offlineAccess: true,
-  //   webClientId: '<replace with your web application client ID>',
-  //   androidClientId: '<replace with your Android client ID>',
+  offlineAccess: true,
+  webClientId: process.env.GOOGLE_SIGN_IN_WEB_CLIENT_ID,
   //   iosClientId: '<replace with your iOS client ID>',
-  //   scopes: ['profile', 'email'],
 });
 
 const Login = () => {
@@ -42,10 +40,20 @@ const Login = () => {
     }
   };
 
+  const signOut = async () => {
+    try {
+      const resp = await GoogleSignin.signOut();
+      console.log(resp);
+    } catch (error) {
+      console.log('Error related to Google sign-in: ', error);
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <GoogleSigninButton onPress={() => testGoogleLoginFunctionality()} />
-    </SafeAreaView>
+      <GoogleSigninButton onPress={() => signOut()} />
+    </View>
   );
 };
 
@@ -54,6 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 150,
   },
 });
 

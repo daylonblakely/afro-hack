@@ -1,4 +1,4 @@
-package com.afro_hack.mobile
+package com.afro_hack1.mobile
 
 import android.os.Build
 import android.os.Bundle

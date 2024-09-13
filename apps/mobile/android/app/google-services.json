@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1040833172816:android:7ef8c25f3f03b772d00855",
+        "mobilesdk_app_id": "1:1040833172816:android:de7b2a7b8faa4fe6d00855",
         "android_client_info": {
-          "package_name": "com.afro_hack.mobile"
+          "package_name": "com.afro_hack1.mobile"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1040833172816-2etl2uhvkvvtp6hhg5s4m1q1g41ki0q2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.afro_hack1.mobile",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1040833172816-6rscj92p7ud1m1qciel93fdhi9naakmf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA1ododEyKMIrquEz12YnZX-MWhCIBQwaI"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040833172816-6rscj92p7ud1m1qciel93fdhi9naakmf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

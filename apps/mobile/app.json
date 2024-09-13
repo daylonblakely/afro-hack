@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.afro_hack.mobile",
+      "package": "com.afro_hack1.mobile",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
