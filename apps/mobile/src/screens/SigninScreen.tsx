@@ -12,7 +12,7 @@ GoogleSignin.configure({
   //   iosClientId: '<replace with your iOS client ID>',
 });
 
-const Login = () => {
+const SigninScreen = () => {
   async function onGoogleButtonPress() {
     try {
       await GoogleSignin.hasPlayServices();
@@ -37,19 +37,10 @@ const Login = () => {
     }
   }
 
-  const signOut = async () => {
-    try {
-      await GoogleSignin.signOut();
-      await auth().signOut();
-    } catch (error) {
-      console.log('Error related to Google sign-in: ', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <GoogleSigninButton onPress={() => onGoogleButtonPress()} />
-      <GoogleSigninButton onPress={() => signOut()} />
+      {/* <GoogleSigninButton onPress={() => signOut()} /> */}
     </View>
   );
 };
@@ -63,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default SigninScreen;
