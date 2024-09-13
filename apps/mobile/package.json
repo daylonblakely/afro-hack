@@ -29,7 +29,9 @@
     "@expo/metro-config": "*",
     "react-native-svg-transformer": "*",
     "@react-native-google-signin/google-signin": "*",
-    "expo-dev-client": "*"
+    "expo-dev-client": "*",
+    "@react-native-firebase/app": "*",
+    "@react-native-firebase/auth": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp package-lock.json apps/mobile",

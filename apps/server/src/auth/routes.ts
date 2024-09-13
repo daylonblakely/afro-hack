@@ -4,6 +4,7 @@ import User from './models/User'; // Adjust the path as needed
 import { OAuth2Client } from 'google-auth-library';
 import axios from 'axios';
 import authenticateJWT from './middlewares/authenticate-jwt';
+import { verifyToken } from './middlewares/verify-token';
 
 const router = express.Router();
 const googleClient = new OAuth2Client('YOUR_GOOGLE_CLIENT_ID');
@@ -73,7 +74,7 @@ router.post('/facebook', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/currentUser', authenticateJWT, (req: Request, res: Response) => {
+router.get('/currentUser', verifyToken, (req: Request, res: Response) => {
   res.send(req.user);
 });
 

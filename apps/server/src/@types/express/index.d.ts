@@ -1,7 +1,9 @@
 import 'express';
 
-declare module 'express' {
-  interface Request {
-    user?: any;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any; // Make sure 'User' is your user type
+    }
   }
 }

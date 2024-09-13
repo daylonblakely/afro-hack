@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:dev": "concurrently \"npx nx start mobile\" \"npx nx run server:serve-nodemon\"",
+    "start:dev": "concurrently \"npx nx run mobile:android\" \"npx nx run server:serve-nodemon\"",
     "start:api": "npx nx run server:serve-nodemon"
   },
   "private": true,
@@ -11,6 +11,8 @@
     "@expo/metro-config": "~0.18.1",
     "@expo/metro-runtime": "~3.2.1",
     "@react-native-async-storage/async-storage": "^2.0.0",
+    "@react-native-firebase/app": "^20.5.0",
+    "@react-native-firebase/auth": "^20.5.0",
     "@react-native-google-signin/google-signin": "^13.0.1",
     "axios": "^1.6.0",
     "body-parser": "^1.20.2",
@@ -20,6 +22,7 @@
     "expo-status-bar": "~1.12.1",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
+    "firebase-admin": "^12.5.0",
     "google-auth-library": "^9.14.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.6.1",
