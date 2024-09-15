@@ -7,21 +7,13 @@ import {
   Center,
   Text,
   useColorMode,
+  Circle,
 } from 'native-base';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import axios from 'axios';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../types/root-stack-param-list'; // Import RootStackParamList
-
-type SignInScreenNavigationProp = NavigationProp<RootStackParamList, 'SignIn'>;
 
 const SigninScreen = () => {
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation<SignInScreenNavigationProp>();
   const { colorMode } = useColorMode();
 
   async function onGoogleButtonPress() {
@@ -38,19 +30,6 @@ const SigninScreen = () => {
       );
       const user = userCredential.user;
       if (!user) throw new Error('Failed to get user');
-
-      // const response = await axios.post(
-      //   'https://your-api-url.com/check-user-profile',
-      //   {
-      //     uid: user.uid,
-      //   }
-      // );
-
-      // if (response.data.hasProfile) {
-      //   navigation.navigate('Home');
-      // } else {
-      //   navigation.navigate('Signup');
-      // }
     } catch (error) {
       console.error(error);
     } finally {
@@ -61,29 +40,44 @@ const SigninScreen = () => {
   return (
     <VStack
       flex={1}
-      alignItems="center"
-      justifyContent="center"
       padding={4}
-      // bg="white"
+      justifyContent="center"
+      alignItems="center"
+      bg={colorMode === 'dark' ? 'black' : 'white'}
     >
-      {/* <Image
-        source={{ uri: 'https://example.com/logo.png' }} // Replace with your logo URI
-        alt="App Logo"
-        size="xl"
-        marginBottom={8}
-      /> */}
+      {/* Logo in the center */}
+      <VStack flexGrow={1} justifyContent="center">
+        <Circle size="2xl" bg="primary.500">
+          {/* Replace 'Logo' with your actual Image component */}
+          <Text color="white" fontSize="2xl">
+            Logo
+          </Text>
+        </Circle>
+      </VStack>
 
+      {/* Google Sign In Button at the bottom */}
       {loading ? (
-        <Center>
+        <Center position="absolute" bottom={4}>
           <Spinner size="lg" />
           <Text>Signing in...</Text>
         </Center>
       ) : (
-        <GoogleSigninButton
+        <Button
+          position="absolute"
+          bottom={4}
+          width="80%"
           onPress={onGoogleButtonPress}
-          size={GoogleSigninButton.Size.Wide}
-          color={colorMode || 'dark'}
-        />
+          bg="red.500"
+          // leftIcon={
+          //   <Image
+          //     source={require('../assets/google_logo.png')}
+          //     alt="Google"
+          //     size="xs"
+          //   />
+          // }
+        >
+          <Text color="white">Sign in with Google</Text>
+        </Button>
       )}
     </VStack>
   );

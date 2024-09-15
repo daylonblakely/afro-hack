@@ -7,10 +7,15 @@ import { NativeBaseProvider, Center, Spinner, useColorMode } from 'native-base';
 
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { theme } from './theme';
+import server from '../api/server';
 
 import SigninScreen from '../screens/SigninScreen';
 import HomeScreen from '../screens/HomeScreen';
-// import SignupScreen from '../screens/SignupScreen'; // Add this if you have the signup screen
+import {
+  SignupScreen1,
+  SignupScreen2,
+  SignupScreen3,
+} from '../screens/SignupScreen';
 
 GoogleSignin.configure({
   offlineAccess: true,
@@ -23,13 +28,20 @@ const Stack = createStackNavigator<RootStackParamList>();
 const RootComponent = () => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [hasProfile, setHasProfile] = useState(false); // Track if the user has completed the sign-up process
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
-  function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
+  const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
     setUser(user);
+
+    if (user) {
+      const response = await server.get('/auth/currentUser');
+      setHasProfile(!!response.data);
+    }
+
     if (initializing) setInitializing(false);
-  }
+  };
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -53,12 +65,20 @@ const RootComponent = () => {
         }}
       >
         {!user ? (
+          // If no user is signed in, show the SignIn screen
           <Stack.Screen name="SignIn" component={SigninScreen} />
+        ) : !hasProfile ? (
+          // If the user is signed in but hasn't completed the sign-up flow, show the Signup screens
+          <>
+            <Stack.Screen name="Signup1" component={SignupScreen1} />
+            <Stack.Screen name="Signup2" component={SignupScreen2} />
+            <Stack.Screen name="Signup3" component={SignupScreen3} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+          </>
         ) : (
+          // If the user is signed in and has completed their profile, show the Home screen
           <Stack.Screen name="Home" component={HomeScreen} />
         )}
-        {/* Add the SignUp screen */}
-        {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
