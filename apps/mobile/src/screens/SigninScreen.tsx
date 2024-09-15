@@ -1,57 +1,86 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { VStack, Button, Image, Spinner, Center, Text } from 'native-base';
 import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import axios from 'axios';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../types/root-stack-param-list'; // Import RootStackParamList
 
-GoogleSignin.configure({
-  offlineAccess: true,
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-  //   iosClientId: '<replace with your iOS client ID>',
-});
+type SignInScreenNavigationProp = NavigationProp<RootStackParamList, 'SignIn'>;
 
 const SigninScreen = () => {
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation<SignInScreenNavigationProp>();
+
   async function onGoogleButtonPress() {
+    setLoading(true);
+
     try {
       await GoogleSignin.hasPlayServices();
-
-      // Start the sign-in process
       const { data } = await GoogleSignin.signIn();
+      if (!data) throw new Error('Google Sign-In failed');
 
-      if (!data) return;
-
-      // Create a Firebase credential with the Google token
       const googleCredential = auth.GoogleAuthProvider.credential(data.idToken);
-
-      // Sign in to Firebase with the credential
       const userCredential = await auth().signInWithCredential(
         googleCredential
       );
+      const user = userCredential.user;
+      if (!user) throw new Error('Failed to get user');
 
-      // User is now signed in with Firebase
-      return userCredential;
+      // const response = await axios.post(
+      //   'https://your-api-url.com/check-user-profile',
+      //   {
+      //     uid: user.uid,
+      //   }
+      // );
+
+      // if (response.data.hasProfile) {
+      //   navigation.navigate('Home');
+      // } else {
+      //   navigation.navigate('Signup');
+      // }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <View style={styles.container}>
-      <GoogleSigninButton onPress={() => onGoogleButtonPress()} />
-      {/* <GoogleSigninButton onPress={() => signOut()} /> */}
-    </View>
+    <VStack
+      flex={1}
+      alignItems="center"
+      justifyContent="center"
+      padding={4}
+      bg="white"
+    >
+      {/* <Image
+        source={{ uri: 'https://example.com/logo.png' }} // Replace with your logo URI
+        alt="App Logo"
+        size="xl"
+        marginBottom={8}
+      /> */}
+
+      {loading ? (
+        <Center>
+          <Spinner size="lg" />
+          <Text>Signing in...</Text>
+        </Center>
+      ) : (
+        <GoogleSigninButton
+          onPress={onGoogleButtonPress}
+          size={GoogleSigninButton.Size.Wide}
+        />
+      )}
+
+      <Button marginTop={4} onPress={() => console.log('Toggle theme')}>
+        Toggle Dark/Light Mode
+      </Button>
+    </VStack>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 150,
-  },
-});
 
 export default SigninScreen;

@@ -31,7 +31,14 @@
     "@react-native-google-signin/google-signin": "*",
     "expo-dev-client": "*",
     "@react-native-firebase/app": "*",
-    "@react-native-firebase/auth": "*"
+    "@react-native-firebase/auth": "*",
+    "axios": "*",
+    "native-base": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/stack": "*",
+    "react-native-screens": "*",
+    "react-native-safe-area-context": "*",
+    "react-native-gesture-handler": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp package-lock.json apps/mobile",
