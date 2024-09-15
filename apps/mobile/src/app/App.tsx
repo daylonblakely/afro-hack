@@ -3,8 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { NativeBaseProvider, Center, Spinner } from 'native-base';
+import { NativeBaseProvider, Center, Spinner, useColorMode } from 'native-base';
+
 import { RootStackParamList } from '../types/root-stack-param-list';
+import { theme } from './theme';
 
 import SigninScreen from '../screens/SigninScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -18,9 +20,11 @@ GoogleSignin.configure({
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-export const App = () => {
+const RootComponent = () => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const { colorMode } = useColorMode();
+  const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
   function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
     setUser(user);
@@ -34,29 +38,37 @@ export const App = () => {
 
   if (initializing) {
     return (
-      <NativeBaseProvider>
-        <Center flex={1}>
-          <Spinner size="lg" />
-        </Center>
-      </NativeBaseProvider>
+      <Center flex={1} bg={bgColor}>
+        <Spinner size="lg" />
+      </Center>
     );
   }
 
   return (
-    <NativeBaseProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {!user ? (
-            <Stack.Screen name="SignIn" component={SigninScreen} />
-          ) : (
-            <Stack.Screen name="Home" component={HomeScreen} />
-          )}
-          {/* Add the SignUp screen */}
-          {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          cardStyle: { backgroundColor: bgColor },
+        }}
+      >
+        {!user ? (
+          <Stack.Screen name="SignIn" component={SigninScreen} />
+        ) : (
+          <Stack.Screen name="Home" component={HomeScreen} />
+        )}
+        {/* Add the SignUp screen */}
+        {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
+const App = () => {
+  return (
+    <NativeBaseProvider theme={theme}>
+      <RootComponent />
+    </NativeBaseProvider>
+  );
+};
 export default App;

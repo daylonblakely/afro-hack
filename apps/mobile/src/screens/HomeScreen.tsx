@@ -3,8 +3,12 @@ import React from 'react';
 import server from '../api/server';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import { useColorMode, Button } from 'native-base';
 
 const HomeScreen = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  console.log(colorMode);
+
   const signOut = async () => {
     try {
       await GoogleSignin.signOut();
@@ -34,6 +38,9 @@ const HomeScreen = () => {
       <TouchableOpacity onPress={() => signOut()}>
         <Text>Sign out</Text>
       </TouchableOpacity>
+      <Button marginTop={4} onPress={toggleColorMode}>
+        Toggle Dark/Light Mode
+      </Button>
     </View>
   );
 };

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { VStack, Button, Image, Spinner, Center, Text } from 'native-base';
+import {
+  VStack,
+  Button,
+  Image,
+  Spinner,
+  Center,
+  Text,
+  useColorMode,
+} from 'native-base';
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -14,6 +22,7 @@ type SignInScreenNavigationProp = NavigationProp<RootStackParamList, 'SignIn'>;
 const SigninScreen = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<SignInScreenNavigationProp>();
+  const { colorMode } = useColorMode();
 
   async function onGoogleButtonPress() {
     setLoading(true);
@@ -55,7 +64,7 @@ const SigninScreen = () => {
       alignItems="center"
       justifyContent="center"
       padding={4}
-      bg="white"
+      // bg="white"
     >
       {/* <Image
         source={{ uri: 'https://example.com/logo.png' }} // Replace with your logo URI
@@ -73,12 +82,9 @@ const SigninScreen = () => {
         <GoogleSigninButton
           onPress={onGoogleButtonPress}
           size={GoogleSigninButton.Size.Wide}
+          color={colorMode || 'dark'}
         />
       )}
-
-      <Button marginTop={4} onPress={() => console.log('Toggle theme')}>
-        Toggle Dark/Light Mode
-      </Button>
     </VStack>
   );
 };
