@@ -1,5 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { IUser } from '@afro-hack/types';
+
+type UserDoc = IUser & Document;
 
 const UserSchema: Schema = new Schema(
   {
@@ -14,6 +16,6 @@ const UserSchema: Schema = new Schema(
   }
 );
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const User = mongoose.model<UserDoc>('User', UserSchema);
 
 export default User;

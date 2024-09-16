@@ -7,7 +7,10 @@ import { NativeBaseProvider, Center, Spinner, useColorMode } from 'native-base';
 
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { theme } from './theme';
-import server from '../api/server';
+import {
+  Provider as UserProvider,
+  useUserContext,
+} from '../context/user-context';
 
 import SigninScreen from '../screens/SigninScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -26,18 +29,20 @@ GoogleSignin.configure({
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootComponent = () => {
+  const { state: user, signOut } = useUserContext();
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-  const [hasProfile, setHasProfile] = useState(false); // Track if the user has completed the sign-up process
+  const [firebaseUser, setFirebaseUser] =
+    useState<FirebaseAuthTypes.User | null>(null);
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
-  const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
-    setUser(user);
+  console.log('user: ', user);
 
-    if (user) {
-      const response = await server.get('/auth/currentUser');
-      setHasProfile(!!response.data);
+  const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
+    setFirebaseUser(user);
+
+    if (!user) {
+      signOut();
     }
 
     if (initializing) setInitializing(false);
@@ -64,16 +69,15 @@ const RootComponent = () => {
           cardStyle: { backgroundColor: bgColor },
         }}
       >
-        {!user ? (
+        {!firebaseUser ? (
           // If no user is signed in, show the SignIn screen
           <Stack.Screen name="SignIn" component={SigninScreen} />
-        ) : !hasProfile ? (
+        ) : !user ? (
           // If the user is signed in but hasn't completed the sign-up flow, show the Signup screens
           <>
             <Stack.Screen name="Signup1" component={SignupScreen1} />
             <Stack.Screen name="Signup2" component={SignupScreen2} />
             <Stack.Screen name="Signup3" component={SignupScreen3} />
-            <Stack.Screen name="Home" component={HomeScreen} />
           </>
         ) : (
           // If the user is signed in and has completed their profile, show the Home screen
@@ -87,7 +91,9 @@ const RootComponent = () => {
 const App = () => {
   return (
     <NativeBaseProvider theme={theme}>
-      <RootComponent />
+      <UserProvider>
+        <RootComponent />
+      </UserProvider>
     </NativeBaseProvider>
   );
 };

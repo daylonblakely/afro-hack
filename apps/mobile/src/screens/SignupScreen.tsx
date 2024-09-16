@@ -15,6 +15,7 @@ import {
   RouteProp,
 } from '@react-navigation/native';
 import { RootStackParamList } from '../types/root-stack-param-list';
+import { useUserContext } from '../context/user-context';
 
 type SignUpScreenNavigationProp = NavigationProp<RootStackParamList, 'Signup1'>;
 type SignUpScreenRouteProp2 = RouteProp<RootStackParamList, 'Signup2'>;
@@ -60,13 +61,15 @@ const SignupScreen2 = ({ route }: { route: SignUpScreenRouteProp2 }) => {
 };
 
 const SignupScreen3 = ({ route }: { route: SignUpScreenRouteProp3 }) => {
+  const { createUser } = useUserContext();
   const navigation = useNavigation<SignUpScreenNavigationProp>();
   const [answer3, setAnswer3] = useState('');
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     const { answer1, answer2 } = route.params;
     // Handle final submission logic (e.g., send answers to API)
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
+    await createUser();
   };
 
   return (

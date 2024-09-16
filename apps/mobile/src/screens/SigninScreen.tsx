@@ -11,8 +11,10 @@ import {
 } from 'native-base';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import { useUserContext } from '../context/user-context';
 
 const SigninScreen = () => {
+  const { fetchUser } = useUserContext();
   const [loading, setLoading] = useState(false);
   const { colorMode } = useColorMode();
 
@@ -30,6 +32,8 @@ const SigninScreen = () => {
       );
       const user = userCredential.user;
       if (!user) throw new Error('Failed to get user');
+
+      await fetchUser();
     } catch (error) {
       console.error(error);
     } finally {

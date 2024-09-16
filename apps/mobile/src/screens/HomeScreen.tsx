@@ -6,8 +6,7 @@ import auth from '@react-native-firebase/auth';
 import { useColorMode, Button } from 'native-base';
 
 const HomeScreen = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  console.log(colorMode);
+  const { toggleColorMode } = useColorMode();
 
   const signOut = async () => {
     try {
