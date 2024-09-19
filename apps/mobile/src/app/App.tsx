@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -80,6 +81,11 @@ const App = () => {
   return (
     <NativeBaseProvider theme={theme}>
       <UserProvider>
+        <StatusBar
+          translucent
+          backgroundColor="#17171780" // muted.900
+          barStyle="light-content"
+        />
         <RootComponent />
       </UserProvider>
     </NativeBaseProvider>
