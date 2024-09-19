@@ -13,12 +13,8 @@ import {
 } from '../context/user-context';
 
 import SigninScreen from '../screens/SigninScreen';
+import SignupFlow from '../screens/SignupFlow';
 import HomeScreen from '../screens/HomeScreen';
-import {
-  SignupScreen1,
-  SignupScreen2,
-  SignupScreen3,
-} from '../screens/SignupScreen';
 
 GoogleSignin.configure({
   offlineAccess: true,
@@ -74,11 +70,7 @@ const RootComponent = () => {
           <Stack.Screen name="SignIn" component={SigninScreen} />
         ) : !user ? (
           // If the user is signed in but hasn't completed the sign-up flow, show the Signup screens
-          <>
-            <Stack.Screen name="Signup1" component={SignupScreen1} />
-            <Stack.Screen name="Signup2" component={SignupScreen2} />
-            <Stack.Screen name="Signup3" component={SignupScreen3} />
-          </>
+          <Stack.Screen name="Signup" component={SignupFlow} />
         ) : (
           // If the user is signed in and has completed their profile, show the Home screen
           <Stack.Screen name="Home" component={HomeScreen} />
