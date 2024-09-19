@@ -1,26 +1,17 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 import server from '../api/server';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
 import { useColorMode, Button } from 'native-base';
+import { useUserContext } from '../context/user-context';
 
 const HomeScreen = () => {
   const { toggleColorMode } = useColorMode();
-
-  const signOut = async () => {
-    try {
-      await GoogleSignin.signOut();
-      await auth().signOut();
-    } catch (error) {
-      console.log('Error related to Google sign-in: ', error);
-    }
-  };
+  const { signOut } = useUserContext();
 
   return (
     <View>
-      <Text>Screen</Text>
-      <TouchableOpacity
+      <Button
+        marginTop={4}
         onPress={() => {
           server
             .get('/auth/currentUser')
@@ -32,11 +23,11 @@ const HomeScreen = () => {
             });
         }}
       >
-        <Text>protected</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => signOut()}>
-        <Text>Sign out</Text>
-      </TouchableOpacity>
+        protected
+      </Button>
+      <Button marginTop={4} onPress={signOut}>
+        Sign out
+      </Button>
       <Button marginTop={4} onPress={toggleColorMode}>
         Toggle Dark/Light Mode
       </Button>

@@ -1,7 +1,9 @@
 import React from 'react';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import { IUser } from '@afro-hack/types';
 import createDataContext from './create-data-context';
 import server from '../api/server';
-import { IUser } from '@afro-hack/types';
 
 const userReducer = (state: IUser, action: { type: string; payload: any }) => {
   switch (action.type) {
@@ -37,8 +39,14 @@ const createUser = (dispatch: React.Dispatch<any>) => async () => {
   }
 };
 
-const signOut = (dispatch: React.Dispatch<any>) => () => {
-  dispatch({ type: 'set_user', payload: null });
+const signOut = (dispatch: React.Dispatch<any>) => async () => {
+  try {
+    await GoogleSignin.signOut();
+    await auth().signOut();
+    dispatch({ type: 'set_user', payload: null });
+  } catch (error) {
+    console.log('Error related to Google sign-in: ', error);
+  }
 };
 
 export const {

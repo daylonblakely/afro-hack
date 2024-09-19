@@ -25,7 +25,7 @@ GoogleSignin.configure({
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootComponent = () => {
-  const { state: user, signOut } = useUserContext();
+  const { state: user } = useUserContext();
   const [initializing, setInitializing] = useState(true);
   const [firebaseUser, setFirebaseUser] =
     useState<FirebaseAuthTypes.User | null>(null);
@@ -36,10 +36,6 @@ const RootComponent = () => {
 
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
     setFirebaseUser(user);
-
-    if (!user) {
-      signOut();
-    }
 
     if (initializing) setInitializing(false);
   };
