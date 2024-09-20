@@ -1,29 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Dimensions, Animated } from 'react-native';
-import { Box, useTheme, Text, useColorMode } from 'native-base';
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-  HandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { Box, Text, useColorMode } from 'native-base';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useUserContext } from '../context/user-context';
+import VerticalFeed from '../components/VerticalFeed';
 import Fab from '../components/Fab';
 import { MenuIconProps } from '../components/MenuIcon';
-
-const { height } = Dimensions.get('window');
 
 const HomeScreen = () => {
   const { toggleColorMode, colorMode } = useColorMode();
   const { signOut } = useUserContext();
   const [quotes, setQuotes] = useState<string[]>([]);
-  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-
-  // New animation values
-  const opacity = useRef(new Animated.Value(1)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
-
-  const theme = useTheme();
 
   const menuIcons: MenuIconProps[] = [
     {
@@ -56,65 +43,6 @@ const HomeScreen = () => {
     }
   };
 
-  // Animate quote transition
-  const animateQuoteTransition = (direction: 'up' | 'down') => {
-    // Animate the current quote out
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      // Change the quote after the current one fades out
-      setCurrentQuoteIndex((prevIndex) =>
-        direction === 'up'
-          ? Math.min(prevIndex + 1, quotes.length - 1)
-          : Math.max(prevIndex - 1, 0)
-      );
-
-      // Animate the new quote in
-      translateY.setValue(direction === 'up' ? height : -height);
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    });
-  };
-
-  // Handle vertical swipe
-  const handleSwipe = (
-    event: HandlerStateChangeEvent<Record<string, unknown>>
-  ) => {
-    const { translationY } = event.nativeEvent;
-
-    if (
-      (translationY as number) < -height / 6 &&
-      currentQuoteIndex < quotes.length - 1
-    ) {
-      animateQuoteTransition('up');
-    } else if ((translationY as number) > height / 6 && currentQuoteIndex > 0) {
-      animateQuoteTransition('down');
-    } else {
-      // Animate back to center if swipe is not enough
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
-
-  const onGestureEvent = Animated.event(
-    [{ nativeEvent: { translationY: translateY } }],
-    { useNativeDriver: true }
-  );
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* App Title at the Top */}
@@ -125,33 +53,7 @@ const HomeScreen = () => {
       </Box>
 
       {/* Swipeable quote box */}
-      <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={handleSwipe}>
-        <Animated.View
-          style={{
-            transform: [{ translateY }],
-            opacity,
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Box
-            px={5}
-            py={8}
-            rounded="lg"
-            borderWidth={1}
-            maxWidth="90%"
-            borderColor={theme.colors.primary[500]}
-            alignItems="center"
-          >
-            <Text fontSize="lg" fontStyle="italic" textAlign="center">
-              {quotes.length > 0
-                ? quotes[currentQuoteIndex]
-                : 'Loading quotes...'}
-            </Text>
-          </Box>
-        </Animated.View>
-      </PanGestureHandler>
+      <VerticalFeed items={quotes} />
 
       {/* Floating Action Button */}
       <Fab menuIcons={menuIcons} />
