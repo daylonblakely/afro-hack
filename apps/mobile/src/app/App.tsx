@@ -26,17 +26,21 @@ GoogleSignin.configure({
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootComponent = () => {
-  const { state: user } = useUserContext();
+  const { state: appUser, fetchUser } = useUserContext();
   const [initializing, setInitializing] = useState(true);
   const [firebaseUser, setFirebaseUser] =
     useState<FirebaseAuthTypes.User | null>(null);
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
-  console.log('user: ', user);
+  console.log('user: ', appUser);
 
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
     setFirebaseUser(user);
+
+    if (user && !appUser) {
+      await fetchUser();
+    }
 
     if (initializing) setInitializing(false);
   };
@@ -65,7 +69,7 @@ const RootComponent = () => {
         {!firebaseUser ? (
           // If no user is signed in, show the SignIn screen
           <Stack.Screen name="SignIn" component={SigninScreen} />
-        ) : !user ? (
+        ) : !appUser ? (
           // If the user is signed in but hasn't completed the sign-up flow, show the Signup screens
           <Stack.Screen name="Signup" component={SignupFlow} />
         ) : (

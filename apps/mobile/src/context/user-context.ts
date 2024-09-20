@@ -5,7 +5,10 @@ import { IUser } from '@afro-hack/types';
 import createDataContext from './create-data-context';
 import server from '../api/server';
 
-const userReducer = (state: IUser, action: { type: string; payload: any }) => {
+const userReducer = (
+  state: IUser,
+  action: { type: string; payload: IUser | null }
+) => {
   switch (action.type) {
     case 'set_user':
       return action.payload;
