@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Dimensions, Animated } from 'react-native';
 import { Box, useTheme, Text, useColorMode } from 'native-base';
 import {
@@ -19,8 +19,11 @@ const HomeScreen = () => {
   const [quotes, setQuotes] = useState<string[]>([]);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 
+  // New animation values
+  const opacity = useRef(new Animated.Value(1)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+
   const theme = useTheme();
-  const translateY = new Animated.Value(0);
 
   const menuIcons: MenuIconProps[] = [
     {
@@ -46,13 +49,43 @@ const HomeScreen = () => {
 
   const fetchQuotes = async () => {
     try {
-      //   const response = await fetch('https://api.example.com/quotes');
-      //   const data = await response.json();
-      const data = ['ahhahahahah', 'what the fuuuuuuuuck'];
+      const data = ['First Quote', 'Second Quote', 'Third Quote'];
       setQuotes(data);
     } catch (error) {
       console.error('Error fetching quotes:', error);
     }
+  };
+
+  // Animate quote transition
+  const animateQuoteTransition = (direction: 'up' | 'down') => {
+    // Animate the current quote out
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      // Change the quote after the current one fades out
+      setCurrentQuoteIndex((prevIndex) =>
+        direction === 'up'
+          ? Math.min(prevIndex + 1, quotes.length - 1)
+          : Math.max(prevIndex - 1, 0)
+      );
+
+      // Animate the new quote in
+      translateY.setValue(direction === 'up' ? height : -height);
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    });
   };
 
   // Handle vertical swipe
@@ -65,18 +98,11 @@ const HomeScreen = () => {
       (translationY as number) < -height / 6 &&
       currentQuoteIndex < quotes.length - 1
     ) {
-      setCurrentQuoteIndex((prev) => prev + 1);
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
+      animateQuoteTransition('up');
     } else if ((translationY as number) > height / 6 && currentQuoteIndex > 0) {
-      setCurrentQuoteIndex((prev) => prev - 1);
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
+      animateQuoteTransition('down');
     } else {
+      // Animate back to center if swipe is not enough
       Animated.spring(translateY, {
         toValue: 0,
         useNativeDriver: true,
@@ -103,6 +129,7 @@ const HomeScreen = () => {
         <Animated.View
           style={{
             transform: [{ translateY }],
+            opacity,
             height: '100%',
             justifyContent: 'center',
             alignItems: 'center',
