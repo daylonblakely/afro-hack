@@ -97,7 +97,7 @@ const SignupPage = ({
       </Center>
 
       <Progress value={progress} width="80%" mb={4} />
-      <Button onPress={onNext} width="80%">
+      <Button onPress={onNext} isDisabled={!value} width="80%">
         <Text color="white">{progress === 100 ? 'Complete' : 'Next'}</Text>
       </Button>
     </VStack>
