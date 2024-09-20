@@ -1,35 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Animated } from 'react-native';
-import {
-  Box,
-  Fab,
-  Icon,
-  useTheme,
-  Text,
-  Button,
-  Stagger,
-  Modal,
-  useDisclose,
-  useColorMode,
-} from 'native-base';
+import { Box, useTheme, Text, useColorMode } from 'native-base';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
   HandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
+
 import { useUserContext } from '../context/user-context';
+import Fab from '../components/Fab';
+import { MenuIconProps } from '../components/MenuIcon';
 
 const { height } = Dimensions.get('window');
 
-const QuoteScreen = () => {
-  const { toggleColorMode } = useColorMode();
+const HomeScreen = () => {
+  const { toggleColorMode, colorMode } = useColorMode();
   const { signOut } = useUserContext();
   const [quotes, setQuotes] = useState<string[]>([]);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-  const { isOpen, onToggle } = useDisclose();
+
   const theme = useTheme();
   const translateY = new Animated.Value(0);
+
+  const menuIcons: MenuIconProps[] = [
+    {
+      bg: 'red.400',
+      icon: 'dark-mode',
+      text: colorMode === 'dark' ? 'Light Mode' : 'Dark Mode',
+      onPress: toggleColorMode,
+      disabled: false,
+    },
+    {
+      bg: 'yellow.400',
+      icon: 'logout',
+      text: 'Sign Out',
+      onPress: signOut,
+      disabled: false,
+    },
+  ];
 
   // Fetching the quotes from an API
   useEffect(() => {
@@ -119,54 +127,9 @@ const QuoteScreen = () => {
       </PanGestureHandler>
 
       {/* Floating Action Button */}
-      <Fab
-        position="absolute"
-        size="sm"
-        icon={<Icon as={MaterialIcons} name="menu" />}
-        placement="bottom-right"
-        bg={theme.colors.secondary[500]}
-        onPress={onToggle}
-      ></Fab>
-      <Modal isOpen={isOpen} onClose={onToggle}>
-        <Stagger
-          visible={isOpen}
-          initial={{
-            opacity: 0,
-            scale: 0,
-          }}
-          animate={{
-            scale: 1,
-            opacity: 1,
-            transition: {
-              type: 'spring',
-              mass: 0.8,
-              stiffness: 100,
-              stagger: {
-                offset: 30,
-                reverse: true,
-              },
-            },
-          }}
-        >
-          <Box position="absolute" bottom={16} right={4} flexDirection="column">
-            <Button
-              bg={theme.colors.primary[500]}
-              leftIcon={<Icon as={MaterialIcons} name="share" size="sm" />}
-              onPress={() => console.log('Share')}
-            >
-              Share
-            </Button>
-            <Button marginTop={4} onPress={signOut}>
-              Sign out
-            </Button>
-            <Button marginTop={4} onPress={toggleColorMode}>
-              Toggle Dark/Light Mode
-            </Button>
-          </Box>
-        </Stagger>
-      </Modal>
+      <Fab menuIcons={menuIcons} />
     </GestureHandlerRootView>
   );
 };
 
-export default QuoteScreen;
+export default HomeScreen;
