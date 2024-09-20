@@ -1,7 +1,7 @@
 export interface IPrompt {
   prompt: string;
-  result: string;
-  consensus?: string;
+  question: string;
+  answer: string;
   createdDate: Date;
 }
 

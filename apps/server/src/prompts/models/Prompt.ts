@@ -5,8 +5,8 @@ type PromptDoc = IPrompt & Document;
 
 const promptSchema: Schema = new Schema({
   prompt: { type: String, required: true },
-  result: { type: String, required: true },
-  consensus: { type: String, default: null },
+  question: { type: String, required: true },
+  answer: { type: String, default: null },
   createdDate: {
     type: Date,
     required: true,
