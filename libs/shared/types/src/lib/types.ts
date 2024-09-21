@@ -8,7 +8,6 @@ export interface IPrompt {
 export interface IUser {
   name: string;
   email: string;
-  googleId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
