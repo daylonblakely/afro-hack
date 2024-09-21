@@ -28,22 +28,13 @@ const Stack = createStackNavigator<RootStackParamList>();
 const RootComponent = () => {
   const { state: appUser, fetchUser } = useUserContext();
   const [initializing, setInitializing] = useState(true);
-  const [fetchingUser, setFetchingUser] = useState(true);
-  const [firebaseUser, setFirebaseUser] =
-    useState<FirebaseAuthTypes.User | null>(null);
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
-  console.log('user: ', appUser);
-
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
-    setFirebaseUser(user);
-
     if (user && !appUser) {
-      console.log('fetching user');
       await fetchUser();
     }
-    setFetchingUser(false);
 
     if (initializing) setInitializing(false);
   };
@@ -53,7 +44,7 @@ const RootComponent = () => {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (initializing || fetchingUser) {
+  if (initializing) {
     return (
       <Center flex={1} bg={bgColor}>
         <Spinner size="lg" />
@@ -69,13 +60,14 @@ const RootComponent = () => {
           cardStyle: { backgroundColor: bgColor },
         }}
       >
-        {/* TODO fix the auth flow */}
-        {!firebaseUser ? (
-          // If no user is signed in, show the SignIn screen
-          <Stack.Screen name="SignIn" component={SigninScreen} />
-        ) : !appUser ? (
-          // If the user is signed in but hasn't completed the sign-up flow, show the Signup screens
-          <Stack.Screen name="Signup" component={SignupFlow} />
+        {!appUser ? (
+          <>
+            {/* // If no user is signed in, show the SignIn screen */}
+            <Stack.Screen name="SignIn" component={SigninScreen} />
+            {/* // If the user is signed in but hasn't completed the sign-up flow,
+            show the Signup screens */}
+            <Stack.Screen name="Signup" component={SignupFlow} />
+          </>
         ) : (
           // If the user is signed in and has completed their profile, show the Home screen
           <Stack.Screen name="Home" component={HomeScreen} />

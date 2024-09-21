@@ -11,8 +11,14 @@ import {
 } from 'native-base';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import type { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/root-stack-param-list';
+import { useUserContext } from '../context/user-context';
 
-const SigninScreen = () => {
+type Props = StackScreenProps<RootStackParamList, 'SignIn'>;
+
+const SigninScreen = ({ navigation }: Props) => {
+  const { fetchUser } = useUserContext();
   const [loading, setLoading] = useState(false);
   const { colorMode } = useColorMode();
 
@@ -30,6 +36,8 @@ const SigninScreen = () => {
       );
       const user = userCredential.user;
       if (!user) throw new Error('Failed to get user');
+
+      await fetchUser(() => navigation.navigate('Signup'));
     } catch (error) {
       console.error(error);
     } finally {

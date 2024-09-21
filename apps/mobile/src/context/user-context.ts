@@ -17,14 +17,18 @@ const userReducer = (state: UserState, action: Actions) => {
   }
 };
 
-const fetchUser = (dispatch: React.Dispatch<Actions>) => async () => {
-  try {
-    const { data } = await server.get('/auth/currentUser');
-    dispatch({ type: 'set_user', payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
+const fetchUser =
+  (dispatch: React.Dispatch<Actions>) =>
+  async (onErrorCallback: () => void) => {
+    try {
+      const { data } = await server.get('/auth/currentUser');
+      dispatch({ type: 'set_user', payload: data });
+    } catch (error: any) {
+      if (error.status === 404) {
+        onErrorCallback();
+      }
+    }
+  };
 
 const createUser =
   (dispatch: React.Dispatch<Actions>) =>
