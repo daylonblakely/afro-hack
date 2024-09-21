@@ -115,7 +115,7 @@ const SignupFlow = () => {
     if (currentStep === signUpFlowConfig.length - 1) {
       // Final step logic (e.g., submit answers)
       console.log(answers);
-      createUser();
+      createUser({ name: answers[0] });
     } else {
       setCurrentStep(currentStep + 1);
     }

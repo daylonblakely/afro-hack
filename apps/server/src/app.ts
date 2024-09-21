@@ -40,6 +40,7 @@ app.all('*', async (_req, _res) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error, _req, res, _next) => {
   res.status(error.statusCode || 500);
+  console.error(error);
   res.json({
     error: {
       message: error.message,
