@@ -12,10 +12,15 @@ import {
   Provider as UserProvider,
   useUserContext,
 } from '../context/user-context';
+import {
+  Provider as LoadingProvider,
+  useLoadingContext,
+} from '../context/loading-context';
 
 import SigninScreen from '../screens/SigninScreen';
 import SignupFlow from '../screens/SignupFlow';
 import HomeScreen from '../screens/HomeScreen';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 GoogleSignin.configure({
   offlineAccess: true,
@@ -27,6 +32,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const RootComponent = () => {
   const { state: appUser, fetchUser } = useUserContext();
+  const { state: isLoading } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
@@ -53,41 +59,46 @@ const RootComponent = () => {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyle: { backgroundColor: bgColor },
-        }}
-      >
-        {!appUser ? (
-          <>
-            {/* // If no user is signed in, show the SignIn screen */}
-            <Stack.Screen name="SignIn" component={SigninScreen} />
-            {/* // If the user is signed in but hasn't completed the sign-up flow,
+    <>
+      {isLoading ? <LoadingOverlay /> : null}
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            cardStyle: { backgroundColor: bgColor },
+          }}
+        >
+          {!appUser ? (
+            <>
+              {/* // If no user is signed in, show the SignIn screen */}
+              <Stack.Screen name="SignIn" component={SigninScreen} />
+              {/* // If the user is signed in but hasn't completed the sign-up flow,
             show the Signup screens */}
-            <Stack.Screen name="Signup" component={SignupFlow} />
-          </>
-        ) : (
-          // If the user is signed in and has completed their profile, show the Home screen
-          <Stack.Screen name="Home" component={HomeScreen} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+              <Stack.Screen name="Signup" component={SignupFlow} />
+            </>
+          ) : (
+            // If the user is signed in and has completed their profile, show the Home screen
+            <Stack.Screen name="Home" component={HomeScreen} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 };
 
 const App = () => {
   return (
     <NativeBaseProvider theme={theme}>
-      <UserProvider>
-        <StatusBar
-          translucent
-          backgroundColor="#17171780" // muted.900
-          barStyle="light-content"
-        />
-        <RootComponent />
-      </UserProvider>
+      <LoadingProvider>
+        <UserProvider>
+          <StatusBar
+            translucent
+            backgroundColor="#17171780" // muted.900
+            barStyle="light-content"
+          />
+          <RootComponent />
+        </UserProvider>
+      </LoadingProvider>
     </NativeBaseProvider>
   );
 };
