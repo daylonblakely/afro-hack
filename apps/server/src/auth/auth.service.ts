@@ -1,9 +1,13 @@
 import User from './models/User';
+import { IUser } from '@afro-hack/types';
 
-export const createUser = async (name: string, email: string) => {
+export const createUser = async (
+  email: string,
+  attributes: IUser['attributes']
+) => {
   const newUser = new User({
-    name,
     email,
+    attributes,
   });
 
   return newUser.save();

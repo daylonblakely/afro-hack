@@ -11,21 +11,32 @@ import {
   Radio,
 } from 'native-base';
 import { useUserContext } from '../context/user-context';
+import { UserAttributesType } from '@afro-hack/types';
 
-const signUpFlowConfig = [
+interface ISignupFlowConfig {
+  question: string;
+  type: string;
+  options?: any[];
+  field: UserAttributesType;
+}
+
+const signUpFlowConfig: ISignupFlowConfig[] = [
   {
     question: "What's your name?",
     type: 'text', // Input type
+    field: 'name',
   },
   {
-    question: "What's your favorite color?",
+    question: "What's your current job title",
     type: 'dropdown',
-    options: ['Red', 'Blue', 'Green'], // Dropdown options
+    options: ['Software Engineer', 'Project Manager', 'QA Engineer'], // Dropdown options
+    field: 'occupation',
   },
   {
     question: "What's your preferred language?",
     type: 'radio',
     options: ['English', 'Spanish', 'French'], // Radio button options
+    field: 'language',
   },
 ];
 
@@ -115,7 +126,11 @@ const SignupFlow = () => {
     if (currentStep === signUpFlowConfig.length - 1) {
       // Final step logic (e.g., submit answers)
       console.log(answers);
-      createUser({ name: answers[0] });
+      const fields = answers.reduce<any>((acc, answer, i) => {
+        return { ...acc, [signUpFlowConfig[i].field]: answer };
+      }, {});
+
+      createUser(fields);
     } else {
       setCurrentStep(currentStep + 1);
     }

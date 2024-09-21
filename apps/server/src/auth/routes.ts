@@ -18,7 +18,6 @@ router.get('/currentUser', verifyToken, async (req: Request, res: Response) => {
 });
 
 router.post('/signup', verifyToken, async (req: Request, res: Response) => {
-  const { name } = req.body;
   const { email } = req.user;
 
   const existingUser = await findUserByEmail(email);
@@ -27,7 +26,7 @@ router.post('/signup', verifyToken, async (req: Request, res: Response) => {
     throw new BadRequestError('User already exists');
   }
 
-  const newUser = await createUser(name, email);
+  const newUser = await createUser(email, req.body);
 
   res.status(201).send(newUser.toObject());
 });

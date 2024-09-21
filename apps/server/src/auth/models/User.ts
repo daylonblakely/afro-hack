@@ -4,8 +4,8 @@ import { IUser } from '@afro-hack/types';
 type UserDoc = IUser & Document;
 
 const UserSchema: Schema = new Schema<UserDoc>({
-  name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  attributes: { type: Object },
   createdDate: {
     type: Date,
     default: Date.now,

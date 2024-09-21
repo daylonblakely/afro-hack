@@ -31,12 +31,9 @@ const fetchUser =
   };
 
 const createUser =
-  (dispatch: React.Dispatch<Actions>) =>
-  async ({ name }: { name: string }) => {
+  (dispatch: React.Dispatch<Actions>) => async (fields: any) => {
     try {
-      const { data } = await server.post('/auth/signup', {
-        name,
-      });
+      const { data } = await server.post('/auth/signup', fields);
       dispatch({ type: 'set_user', payload: data });
     } catch (error) {
       console.log(error);

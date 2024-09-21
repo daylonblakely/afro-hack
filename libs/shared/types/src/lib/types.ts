@@ -6,9 +6,15 @@ export interface IPrompt {
   createdDate: Date;
 }
 
+const UserAttributes = ['name', 'language', 'occupation'];
+
+export type UserAttributesType = (typeof UserAttributes)[number];
+
 export interface IUser {
-  name: string;
   email: string;
+  attributes: {
+    [key in UserAttributesType]: string;
+  };
   createdDate?: Date;
   updatedDate?: Date;
 }
