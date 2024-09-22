@@ -16,6 +16,7 @@ import {
   Provider as LoadingProvider,
   useLoadingContext,
 } from '../context/loading-context';
+import { Provider as ConfigProvider } from '../context/signup-config';
 
 import SigninScreen from '../screens/SigninScreen';
 import SignupFlow from '../screens/SignupFlow';
@@ -32,19 +33,27 @@ GoogleSignin.configure({
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootComponent = () => {
-  const { state: appUser, fetchUser } = useUserContext();
+  const { state: appUser, fetchUser, signOut } = useUserContext();
   const { state: isLoading } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
+  const [fireBaseUser, setFireBaseUser] =
+    useState<FirebaseAuthTypes.User | null>(null);
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
-    if (user && !appUser) {
-      await fetchUser();
-    }
+    setFireBaseUser(user);
 
     if (initializing) setInitializing(false);
   };
+
+  useEffect(() => {
+    if (fireBaseUser && !appUser) {
+      fetchUser().catch(() => {
+        console.log('error fetching user');
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -93,14 +102,16 @@ const App = () => {
   return (
     <NativeBaseProvider theme={theme}>
       <LoadingProvider>
-        <UserProvider>
-          <StatusBar
-            translucent
-            backgroundColor="#17171780" // muted.900
-            barStyle="light-content"
-          />
-          <RootComponent />
-        </UserProvider>
+        <ConfigProvider>
+          <UserProvider>
+            <StatusBar
+              translucent
+              backgroundColor="#17171780" // muted.900
+              barStyle="light-content"
+            />
+            <RootComponent />
+          </UserProvider>
+        </ConfigProvider>
       </LoadingProvider>
     </NativeBaseProvider>
   );

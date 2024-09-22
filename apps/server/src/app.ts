@@ -6,6 +6,9 @@ import { NotFoundError } from './errors/not-found-error';
 
 import promptRouter from './prompts/routes';
 import authRouter from './auth/routes';
+import configRouter from './config/routes';
+
+import { verifyToken } from './auth/middlewares/verify-token';
 
 const app = express();
 
@@ -13,22 +16,13 @@ app.use(morgan('combined'));
 
 app.use(json());
 
-// import { ChatOpenAI } from '@langchain/openai';
-// app.get('/', (req: Request, res: Response) => {
-//   const chatModel = new ChatOpenAI({});
-//   chatModel
-//     .invoke('what is LangSmith?')
-//     .then((res) => console.log(res))
-//     .catch((error) => console.log(error));
-//   res.send('Hello, Express with TypeScript!');
-// });
-
 app.get('/', (_req: Request, res: Response) => {
   res.send('server: hello!');
 });
 
-app.use('/prompt', promptRouter);
+app.use('/prompt', verifyToken, promptRouter);
 app.use('/auth', authRouter);
+app.use('/config', verifyToken, configRouter);
 
 // Catch-all route for 404 errors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

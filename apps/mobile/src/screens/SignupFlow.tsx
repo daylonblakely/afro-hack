@@ -11,34 +11,7 @@ import {
   Radio,
 } from 'native-base';
 import { useUserContext } from '../context/user-context';
-import { UserAttributesType } from '@afro-hack/types';
-
-interface ISignupFlowConfig {
-  question: string;
-  type: string;
-  options?: any[];
-  field: UserAttributesType;
-}
-
-const signUpFlowConfig: ISignupFlowConfig[] = [
-  {
-    question: "What's your name?",
-    type: 'text', // Input type
-    field: 'name',
-  },
-  {
-    question: "What's your current job title",
-    type: 'dropdown',
-    options: ['Software Engineer', 'Project Manager', 'QA Engineer'], // Dropdown options
-    field: 'occupation',
-  },
-  {
-    question: "What's your preferred language?",
-    type: 'radio',
-    options: ['English', 'Spanish', 'French'], // Radio button options
-    field: 'language',
-  },
-];
+import { useSignupFlowConfigContext } from '../context/signup-config';
 
 // Reusable component for signup pages
 const SignupPage = ({
@@ -116,6 +89,7 @@ const SignupPage = ({
 };
 
 const SignupFlow = () => {
+  const { state: signUpFlowConfig } = useSignupFlowConfigContext();
   const { createUser } = useUserContext();
   const [answers, setAnswers] = useState<string[]>(
     Array(signUpFlowConfig.length).fill('')
@@ -125,7 +99,6 @@ const SignupFlow = () => {
   const handleNext = () => {
     if (currentStep === signUpFlowConfig.length - 1) {
       // Final step logic (e.g., submit answers)
-      console.log(answers);
       const fields = answers.reduce<any>((acc, answer, i) => {
         return { ...acc, [signUpFlowConfig[i].field]: answer };
       }, {});

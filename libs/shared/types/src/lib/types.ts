@@ -6,7 +6,7 @@ export interface IPrompt {
   createdDate: Date;
 }
 
-const UserAttributes = ['name', 'language', 'occupation'];
+export const UserAttributes = ['name', 'language', 'occupation'];
 
 export type UserAttributesType = (typeof UserAttributes)[number];
 
@@ -17,4 +17,12 @@ export interface IUser {
   };
   createdDate?: Date;
   updatedDate?: Date;
+}
+
+export interface ISignupFlowConfig {
+  question: string;
+  type: string;
+  options?: string[];
+  field: UserAttributesType;
+  order: number;
 }
