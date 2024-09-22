@@ -46,13 +46,7 @@ const SigninScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <VStack
-      flex={1}
-      padding={4}
-      justifyContent="center"
-      alignItems="center"
-      bg={colorMode === 'dark' ? 'black' : 'white'}
-    >
+    <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
       {/* Logo in the center */}
       <VStack flexGrow={1} justifyContent="center">
         <Circle size="2xl" bg="primary.500">
@@ -75,16 +69,16 @@ const SigninScreen = ({ navigation }: Props) => {
           bottom={4}
           width="80%"
           onPress={onGoogleButtonPress}
-          bg="red.500"
-          // leftIcon={
-          //   <Image
-          //     source={require('../assets/google_logo.png')}
-          //     alt="Google"
-          //     size="xs"
-          //   />
-          // }
+          bg="secondary.700"
+          leftIcon={
+            <Image
+              source={require('../../assets/google_logo.png')}
+              alt="Google"
+              size="xs"
+            />
+          }
         >
-          <Text color="white">Sign in with Google</Text>
+          <Text>Sign in with Google</Text>
         </Button>
       )}
     </VStack>
