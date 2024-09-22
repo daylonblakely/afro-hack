@@ -19,6 +19,7 @@ import {
 
 import SigninScreen from '../screens/SigninScreen';
 import SignupFlow from '../screens/SignupFlow';
+import SignupSplash from '../screens/SignupSplash';
 import HomeScreen from '../screens/HomeScreen';
 import LoadingOverlay from '../components/LoadingOverlay';
 
@@ -74,6 +75,7 @@ const RootComponent = () => {
               <Stack.Screen name="SignIn" component={SigninScreen} />
               {/* // If the user is signed in but hasn't completed the sign-up flow,
             show the Signup screens */}
+              <Stack.Screen name="SignupSplash" component={SignupSplash} />
               <Stack.Screen name="Signup" component={SignupFlow} />
             </>
           ) : (

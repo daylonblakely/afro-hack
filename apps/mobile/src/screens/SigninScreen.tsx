@@ -37,7 +37,7 @@ const SigninScreen = ({ navigation }: Props) => {
       const user = userCredential.user;
       if (!user) throw new Error('Failed to get user');
 
-      await fetchUser(() => navigation.navigate('Signup'));
+      await fetchUser(() => navigation.navigate('SignupSplash'));
     } catch (error) {
       console.error(error);
     } finally {
