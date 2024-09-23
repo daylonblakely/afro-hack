@@ -6,7 +6,7 @@ type SignupDoc = ISignupFlowConfig & Document;
 const SignupFlowConfigSchema: Schema = new Schema<SignupDoc>({
   question: { type: String, required: true },
   type: { type: String, required: true },
-  options: { type: [String], default: [] },
+  options: { type: [Object], default: [] },
   field: { type: String, enum: UserAttributes, required: true },
   order: { type: Number, required: true },
 });

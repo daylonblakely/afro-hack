@@ -12,6 +12,7 @@ import {
 } from 'native-base';
 import { useUserContext } from '../context/user-context';
 import { useSignupFlowConfigContext } from '../context/signup-config';
+import { ISignupFlowConfig } from '@afro-hack/types';
 
 // Reusable component for signup pages
 const SignupPage = ({
@@ -29,7 +30,7 @@ const SignupPage = ({
   onNext: () => void;
   progress: number;
   type: string;
-  options?: string[];
+  options?: ISignupFlowConfig['options'];
 }) => {
   return (
     <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
@@ -58,9 +59,9 @@ const SignupPage = ({
           >
             {options.map((option) => (
               <Select.Item
-                label={option}
-                value={option.toLowerCase()}
-                key={option}
+                label={option.option}
+                value={option.option.toLowerCase()}
+                key={option.option}
               />
             ))}
           </Select>
@@ -72,7 +73,7 @@ const SignupPage = ({
             onChange={(nextValue) => setValue(nextValue)}
           >
             {options.map((option) => (
-              <Radio key={option} value={option}>
+              <Radio key={option.option} value={option.option}>
                 {option}
               </Radio>
             ))}

@@ -22,7 +22,7 @@ export interface IUser {
 export interface ISignupFlowConfig {
   question: string;
   type: string;
-  options?: string[];
+  options?: { option: string; subOptions?: ISignupFlowConfig[] }[];
   field: UserAttributesType;
   order: number;
 }
