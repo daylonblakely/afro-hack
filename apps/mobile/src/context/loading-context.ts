@@ -22,4 +22,4 @@ export const {
   Provider,
   Context,
   useCustomContext: useLoadingContext,
-} = createDataContext(loadingReducer, { setIsLoading }, false);
+} = createDataContext<LoadingState>(loadingReducer, { setIsLoading }, false);

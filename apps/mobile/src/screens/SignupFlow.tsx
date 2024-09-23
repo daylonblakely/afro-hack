@@ -90,7 +90,9 @@ const SignupPage = ({
 
 const SignupFlow = () => {
   const { state: signUpFlowConfig } = useSignupFlowConfigContext();
-  const { createUser } = useUserContext();
+  const {
+    actions: { createUser },
+  } = useUserContext();
   const [answers, setAnswers] = useState<string[]>(
     Array(signUpFlowConfig.length).fill('')
   );

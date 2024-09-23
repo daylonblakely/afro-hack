@@ -54,4 +54,8 @@ export const {
   Provider,
   Context,
   useCustomContext: useUserContext,
-} = createDataContext(userReducer, { fetchUser, createUser, signOut }, null);
+} = createDataContext<UserState>(
+  userReducer,
+  { fetchUser, createUser, signOut },
+  null
+);

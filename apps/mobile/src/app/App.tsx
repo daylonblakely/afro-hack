@@ -33,7 +33,10 @@ GoogleSignin.configure({
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootComponent = () => {
-  const { state: appUser, fetchUser, signOut } = useUserContext();
+  const {
+    state: appUser,
+    actions: { fetchUser },
+  } = useUserContext();
   const { state: isLoading } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
   const [fireBaseUser, setFireBaseUser] =
@@ -53,6 +56,7 @@ const RootComponent = () => {
         console.log('error fetching user');
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

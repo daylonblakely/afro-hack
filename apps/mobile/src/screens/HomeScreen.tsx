@@ -10,8 +10,12 @@ import { useLoadingContext } from '../context/loading-context';
 
 const HomeScreen = () => {
   const { toggleColorMode, colorMode } = useColorMode();
-  const { signOut } = useUserContext();
-  const { setIsLoading } = useLoadingContext();
+  const {
+    actions: { signOut },
+  } = useUserContext();
+  const {
+    actions: { setIsLoading },
+  } = useLoadingContext();
   const [quotes, setQuotes] = useState<string[]>([]);
 
   const menuIcons: MenuIconProps[] = [

@@ -18,7 +18,9 @@ import { useUserContext } from '../context/user-context';
 type Props = StackScreenProps<RootStackParamList, 'SignIn'>;
 
 const SigninScreen = ({ navigation }: Props) => {
-  const { fetchUser } = useUserContext();
+  const {
+    actions: { fetchUser },
+  } = useUserContext();
   const [loading, setLoading] = useState(false);
   const { colorMode } = useColorMode();
 

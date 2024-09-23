@@ -34,4 +34,8 @@ export const {
   Provider,
   Context,
   useCustomContext: useSignupFlowConfigContext,
-} = createDataContext(signupFlowConfigReducer, { fetchSignupFlowConfig }, []);
+} = createDataContext<SignupFlowConfigState>(
+  signupFlowConfigReducer,
+  { fetchSignupFlowConfig },
+  []
+);

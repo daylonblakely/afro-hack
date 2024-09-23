@@ -8,7 +8,9 @@ type Props = StackScreenProps<RootStackParamList, 'SignupSplash'>;
 
 const SignupSplash = ({ navigation }: Props) => {
   const { colorMode } = useColorMode();
-  const { fetchSignupFlowConfig } = useSignupFlowConfigContext();
+  const {
+    actions: { fetchSignupFlowConfig },
+  } = useSignupFlowConfigContext();
   const [loadingComplete, setLoadingComplete] = useState(false);
 
   // Automatically redirect to SignUp after fetching config and at least 2-second delay
@@ -29,6 +31,7 @@ const SignupSplash = ({ navigation }: Props) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
