@@ -13,7 +13,7 @@ export type UserAttributesType = (typeof UserAttributes)[number];
 export interface IUser {
   email: string;
   attributes: {
-    [key in UserAttributesType]: string;
+    [key in UserAttributesType]: string | string[];
   };
   createdDate?: Date;
   updatedDate?: Date;

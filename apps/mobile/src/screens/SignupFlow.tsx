@@ -9,6 +9,7 @@ import {
   Select,
   CheckIcon,
   Radio,
+  Checkbox, // Import Checkbox
 } from 'native-base';
 import { useUserContext } from '../context/user-context';
 import { useSignupFlowConfigContext } from '../context/signup-config';
@@ -22,8 +23,8 @@ const SignupField = ({
   options = [],
 }: {
   question: string;
-  value: string;
-  setValue: (value: string) => void;
+  value: string | string[]; // Accept string or array for multi-select
+  setValue: (value: string | string[]) => void;
   type: string;
   options?: ISignupFlowConfig['options'];
 }) => {
@@ -35,21 +36,21 @@ const SignupField = ({
       {type === 'text' && (
         <Input
           placeholder="Enter your answer"
-          value={value}
-          onChangeText={setValue}
+          value={typeof value === 'string' ? value : ''}
+          onChangeText={setValue as (value: string) => void}
           width="80%"
         />
       )}
       {type === 'dropdown' && (
         <Select
-          selectedValue={value}
+          selectedValue={typeof value === 'string' ? value : ''}
           minWidth="200"
           placeholder="Choose an option"
           _selectedItem={{
             bg: 'primary.600',
             endIcon: <CheckIcon size="5" />,
           }}
-          onValueChange={setValue}
+          onValueChange={setValue as (value: string) => void}
         >
           {options.map((option) => (
             <Select.Item
@@ -63,7 +64,7 @@ const SignupField = ({
       {type === 'radio' && (
         <Radio.Group
           name="radioGroup"
-          value={value}
+          value={typeof value === 'string' ? value : ''}
           onChange={(nextValue) => setValue(nextValue)}
         >
           {options.map((option) => (
@@ -72,6 +73,18 @@ const SignupField = ({
             </Radio>
           ))}
         </Radio.Group>
+      )}
+      {type === 'checkbox' && (
+        <Checkbox.Group
+          onChange={(selectedValues) => setValue(selectedValues || [])}
+          defaultValue={Array.isArray(value) ? value : []}
+        >
+          {options.map((option) => (
+            <Checkbox key={option.option} value={option.option}>
+              {option.option}
+            </Checkbox>
+          ))}
+        </Checkbox.Group>
       )}
     </>
   );
@@ -90,14 +103,14 @@ const SignupPage = ({
   subSignupPage,
 }: {
   question: string;
-  value: string;
-  setValue: (value: string) => void;
+  value: string | string[]; // Accept string or array for multi-select
+  setValue: (value: string | string[]) => void;
   onNext: () => void;
   progress: number;
   type: string;
   disableContinue: boolean;
   options?: ISignupFlowConfig['options'];
-  subSignupPage?: React.ReactNode; // Sub-signup component for sub-options
+  subSignupPage?: React.ReactNode;
 }) => {
   return (
     <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
@@ -109,7 +122,6 @@ const SignupPage = ({
           type={type}
           options={options}
         />
-        {/* Dynamically render the subSignupPage if available */}
         {subSignupPage}
       </Center>
 
@@ -126,58 +138,60 @@ const SignupFlow = () => {
   const {
     actions: { createUser },
   } = useUserContext();
-  const [answers, setAnswers] = useState<string[]>(
+  const [answers, setAnswers] = useState<(string | string[])[]>(
     Array(signUpFlowConfig.length).fill('')
   );
-  const [subAnswers, setSubAnswers] = useState<Record<string, string>>({}); // Use Record<string, string>
+  const [subAnswers, setSubAnswers] = useState<
+    Record<string, string | string[]>
+  >({});
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNext = () => {
     if (currentStep === signUpFlowConfig.length - 1) {
-      // Final step logic (e.g., submit answers)
       const fields = answers.reduce<any>((acc, answer, i) => {
         return { ...acc, [signUpFlowConfig[i].field]: answer };
       }, {});
-
       createUser({ ...fields, ...subAnswers });
     } else {
       setCurrentStep(currentStep + 1);
     }
   };
 
-  const handleInputChange = (value: string) => {
+  const handleInputChange = (value: string | string[]) => {
     const updatedAnswers = [...answers];
     updatedAnswers[currentStep] = value;
     setSubAnswers({});
     setAnswers(updatedAnswers);
   };
 
-  const handleSubInputChange = (stepIndex: string, value: string) => {
+  const handleSubInputChange = (
+    stepIndex: string,
+    value: string | string[]
+  ) => {
     setSubAnswers((prev) => ({ ...prev, [stepIndex]: value }));
   };
 
   const currentConfig = signUpFlowConfig[currentStep];
   const selectedOption = currentConfig.options?.find(
     (option) =>
-      option.option.toLowerCase() === answers[currentStep]?.toLowerCase()
+      option.option.toLowerCase() ===
+      (Array.isArray(answers[currentStep])
+        ? answers[currentStep][0]?.toLowerCase()
+        : answers[currentStep]?.toLowerCase())
   );
 
   const progress = ((currentStep + 1) / signUpFlowConfig.length) * 100;
 
-  // Recursive rendering of the subSignupPage for subOptions
   const renderSubSignupPage = (
     subOptions: ISignupFlowConfig[] | undefined,
     parentStep: number
   ) => {
     if (!subOptions || subOptions.length === 0) return null;
-
     return subOptions.map((subOption, index) => {
-      // const stepIndex = `${parentStep}-${index}`; // Use string keys for sub-options
-      const stepIndex = `${subOption.field}`; // Use string keys for sub-options
+      const stepIndex = `${subOption.field}`;
       return (
-        <Center mt={8}>
+        <Center mt={8} key={stepIndex}>
           <SignupField
-            key={stepIndex}
             question={subOption.question}
             value={subAnswers[stepIndex] || ''}
             setValue={(value) => handleSubInputChange(stepIndex, value)}
