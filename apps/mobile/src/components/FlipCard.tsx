@@ -7,6 +7,7 @@ import {
   View,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  StyleSheet,
 } from 'react-native';
 import { Box, Text, useTheme } from 'native-base';
 
@@ -44,21 +45,12 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
   };
 
   const flipCard = () => {
-    if (flipped) {
-      Animated.timing(flipAnimation, {
-        toValue: 0,
-        duration: 800,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(flipAnimation, {
-        toValue: 180,
-        duration: 800,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }).start();
-    }
+    Animated.timing(flipAnimation, {
+      toValue: flipped ? 0 : 180,
+      duration: 800,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
     setFlipped(!flipped);
   };
 
@@ -74,39 +66,15 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
     <TouchableWithoutFeedback onPress={handleDoubleTap}>
       <Box alignItems="center" justifyContent="center" flex={1} padding={4}>
         {/* Front of the card */}
-        <Animated.View
-          style={[
-            {
-              position: 'absolute',
-              width: '80%',
-              height: '60%',
-              backfaceVisibility: 'hidden',
-              backgroundColor: theme.colors.primary[500],
-              borderRadius: 15,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.8,
-              shadowRadius: 5,
-              elevation: 5,
-            },
-            frontAnimatedStyle,
-          ]}
-        >
+        <Animated.View style={[styles.cardStyle, frontAnimatedStyle]}>
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
             onScroll={onScroll} // Attach scroll handler
             scrollEventThrottle={16}
           >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: frontText ? 'center' : 'flex-start',
-                padding: 20,
-              }}
-            >
+            <View style={styles.contentContainer}>
               <Text
                 fontSize="xl"
-                color="white"
                 fontWeight="bold"
                 textAlign="center"
                 lineHeight="lg"
@@ -118,39 +86,15 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
         </Animated.View>
 
         {/* Back of the card */}
-        <Animated.View
-          style={[
-            {
-              position: 'absolute',
-              width: '80%',
-              height: '60%',
-              backfaceVisibility: 'hidden',
-              backgroundColor: theme.colors.secondary[500],
-              borderRadius: 15,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.8,
-              shadowRadius: 5,
-              elevation: 5,
-            },
-            backAnimatedStyle,
-          ]}
-        >
+        <Animated.View style={[styles.cardStyle, backAnimatedStyle]}>
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
             onScroll={onScroll} // Attach scroll handler
             scrollEventThrottle={16}
           >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: backText ? 'center' : 'flex-start',
-                padding: 20,
-              }}
-            >
+            <View style={styles.contentContainer}>
               <Text
                 fontSize="xl"
-                color="white"
                 fontWeight="bold"
                 textAlign="center"
                 lineHeight="lg"
@@ -164,5 +108,27 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
     </TouchableWithoutFeedback>
   );
 };
+
+// Extract static styles using StyleSheet.create
+const styles = StyleSheet.create({
+  cardStyle: {
+    width: '80%',
+    height: '60%',
+    position: 'absolute',
+    backfaceVisibility: 'hidden',
+    borderWidth: 3,
+    // borderRadius: 10,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.8,
+    // shadowRadius: 5,
+    // elevation: 5,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+});
 
 export default FlipCard;
