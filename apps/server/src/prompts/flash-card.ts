@@ -142,10 +142,10 @@ export const generateQuotePrompt = (
   Below are the recently generated quotes:
   ${recentQuotesStr}
   
-  Make sure the quote is engaging, informative, relevant to the user's profile, and not duplicated from recent quotes.
+  Make sure the quote is engaging, informative, relevant to the user's profile, and not duplicated from recent quotes. Also, be sure to include the source of the quote
   
   Quote:
-  Question: {generate the quote}
+  Question: {generate the quote and the person that it came from}
   Answer: {generate any background information about the quote that may be helpful to the user based on their attributes}
   `;
 };

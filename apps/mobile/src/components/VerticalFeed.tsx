@@ -1,5 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { Dimensions, Animated } from 'react-native';
+import React, { useState, useRef, useCallback } from 'react';
+import {
+  Dimensions,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
 import {
   PanGestureHandler,
   HandlerStateChangeEvent,
@@ -15,27 +20,24 @@ interface VerticalFeedProps {
 
 const VerticalFeed = ({ items }: VerticalFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
-  // New animation values
+  // Animation values
   const opacity = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
 
-  // Animate transition
+  // Animate transition between cards
   const animateTransition = (direction: 'up' | 'down') => {
-    // Animate the current item out
     Animated.timing(opacity, {
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
-      // Change the item after the current one fades out
       setCurrentIndex((prevIndex) =>
         direction === 'up'
           ? Math.min(prevIndex + 1, items.length - 1)
           : Math.max(prevIndex - 1, 0)
       );
-
-      // Animate the new item in
       translateY.setValue(direction === 'up' ? height : -height);
       Animated.parallel([
         Animated.timing(translateY, {
@@ -52,31 +54,51 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
     });
   };
 
-  // Handle vertical swipe
+  // Handle swipe between cards
   const handleSwipe = (
     event: HandlerStateChangeEvent<Record<string, unknown>>
   ) => {
     const { translationY } = event.nativeEvent;
 
-    if (
-      (translationY as number) < -height / 6 &&
-      currentIndex < items.length - 1
-    ) {
-      animateTransition('up');
-    } else if ((translationY as number) > height / 6 && currentIndex > 0) {
-      animateTransition('down');
-    } else {
-      // Animate back to center if swipe is not enough
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
+    // Only handle swipe if the user isn't scrolling within the card
+    if (!isScrolling) {
+      if (
+        (translationY as number) < -height / 6 &&
+        currentIndex < items.length - 1
+      ) {
+        animateTransition('up');
+      } else if ((translationY as number) > height / 6 && currentIndex > 0) {
+        animateTransition('down');
+      } else {
+        // Snap back to center if swipe isn't strong enough
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      }
     }
   };
 
   const onGestureEvent = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
     { useNativeDriver: true }
+  );
+
+  // Handle scroll event within the card to detect if scrolling is active
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { contentOffset, contentSize, layoutMeasurement } =
+        event.nativeEvent;
+
+      // If the content is not at the top or bottom of the scroll view, set `isScrolling` to true
+      const isScrollable =
+        contentSize.height > layoutMeasurement.height &&
+        contentOffset.y > 0 &&
+        contentOffset.y < contentSize.height - layoutMeasurement.height;
+
+      setIsScrolling(isScrollable);
+    },
+    []
   );
 
   return (
@@ -93,6 +115,7 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
         <FlipCard
           frontText={items[currentIndex].question}
           backText={items[currentIndex].answer}
+          onScroll={handleScroll} // Pass the scroll handler to FlipCard
         />
       </Animated.View>
     </PanGestureHandler>

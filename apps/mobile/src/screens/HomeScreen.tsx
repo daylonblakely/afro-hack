@@ -48,11 +48,11 @@ const HomeScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* App Title at the Top */}
-      <Box safeAreaTop alignItems="center">
+      {/* <Box safeAreaTop alignItems="center">
         <Text fontSize="2xl" fontWeight="bold">
           QuoteApp
         </Text>
-      </Box>
+      </Box> */}
 
       {/* Swipeable quote box */}
       {cards.length ? <VerticalFeed items={cards} /> : null}
