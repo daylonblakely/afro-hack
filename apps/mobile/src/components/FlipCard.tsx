@@ -1,15 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   Animated,
   Easing,
-  TouchableWithoutFeedback,
-  ScrollView,
-  View,
   NativeSyntheticEvent,
   NativeScrollEvent,
   StyleSheet,
 } from 'react-native';
-import { Box, Text, useTheme } from 'native-base';
+import { Box, Text, useTheme, ScrollView } from 'native-base';
+import {
+  TapGestureHandler,
+  State,
+  TapGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
 
 interface FlipCardProps {
   frontText?: string;
@@ -33,27 +35,6 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
     outputRange: ['180deg', '360deg'],
   });
 
-  // Handle double-tap gesture
-  let lastTap: number | null = null;
-  const handleDoubleTap = () => {
-    const now = Date.now();
-    if (lastTap && now - lastTap < 300) {
-      flipCard();
-    } else {
-      lastTap = now;
-    }
-  };
-
-  const flipCard = () => {
-    Animated.timing(flipAnimation, {
-      toValue: flipped ? 0 : 180,
-      duration: 800,
-      easing: Easing.out(Easing.ease),
-      useNativeDriver: true,
-    }).start();
-    setFlipped(!flipped);
-  };
-
   const frontAnimatedStyle = {
     transform: [{ rotateY: frontInterpolate }],
   };
@@ -62,50 +43,74 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
     transform: [{ rotateY: backInterpolate }],
   };
 
+  // Handle double-tap gesture
+  const onDoubleTap = useCallback(
+    ({ nativeEvent }: TapGestureHandlerGestureEvent) => {
+      if (nativeEvent.state === State.ACTIVE) {
+        // toggle the flip state
+        Animated.timing(flipAnimation, {
+          toValue: flipped ? 0 : 180,
+          duration: 800,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }).start();
+        setFlipped((prev) => !prev);
+      }
+    },
+    [flipped]
+  );
+
   return (
-    <TouchableWithoutFeedback onPress={handleDoubleTap}>
+    <TapGestureHandler onHandlerStateChange={onDoubleTap} numberOfTaps={2}>
       <Box alignItems="center" justifyContent="center" flex={1} padding={4}>
         {/* Front of the card */}
-        <Animated.View style={[styles.cardStyle, frontAnimatedStyle]}>
+        <Animated.View
+          style={[styles.cardStyle, frontAnimatedStyle]}
+          pointerEvents={flipped ? 'none' : 'auto'}
+        >
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            onScroll={onScroll} // Attach scroll handler
+            // onScroll={onScroll} // Attach scroll handler
             scrollEventThrottle={16}
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+              padding: 20,
+              justifyContent: 'center',
+              flex: 1,
+            }}
           >
-            <View style={styles.contentContainer}>
-              <Text
-                fontSize="xl"
-                fontWeight="bold"
-                textAlign="center"
-                lineHeight="lg"
-              >
-                {frontText}
-              </Text>
-            </View>
+            <Text
+              fontSize="xl"
+              fontWeight="bold"
+              textAlign="center"
+              lineHeight="lg"
+            >
+              {frontText}
+            </Text>
           </ScrollView>
         </Animated.View>
 
         {/* Back of the card */}
-        <Animated.View style={[styles.cardStyle, backAnimatedStyle]}>
+        <Animated.View
+          style={[styles.cardStyle, backAnimatedStyle]}
+          pointerEvents={flipped ? 'auto' : 'none'}
+        >
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            onScroll={onScroll} // Attach scroll handler
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 20 }}
             scrollEventThrottle={16}
           >
-            <View style={styles.contentContainer}>
-              <Text
-                fontSize="xl"
-                fontWeight="bold"
-                textAlign="center"
-                lineHeight="lg"
-              >
-                {backText}
-              </Text>
-            </View>
+            <Text
+              fontSize="xl"
+              // fontWeight="bold"
+              textAlign="center"
+              lineHeight="lg"
+            >
+              {backText}
+            </Text>
           </ScrollView>
         </Animated.View>
       </Box>
-    </TouchableWithoutFeedback>
+    </TapGestureHandler>
   );
 };
 
@@ -123,11 +128,6 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.8,
     // shadowRadius: 5,
     // elevation: 5,
-  },
-  contentContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
   },
 });
 
