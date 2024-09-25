@@ -52,7 +52,7 @@ export const createUsersDailyPrompts = async (
       answer: result.answer,
       user: userId,
     });
-    // await record.save();
+    await record.save();
 
     cards.push(record);
   }
