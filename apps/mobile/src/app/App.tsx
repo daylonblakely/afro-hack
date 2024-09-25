@@ -17,6 +17,7 @@ import {
   useLoadingContext,
 } from '../context/loading-context';
 import { Provider as ConfigProvider } from '../context/signup-config';
+import { Provider as FlashCardProvider } from '../context/flash-card-context';
 
 import SigninScreen from '../screens/SigninScreen';
 import SignupFlow from '../screens/SignupFlow';
@@ -108,12 +109,14 @@ const App = () => {
       <LoadingProvider>
         <ConfigProvider>
           <UserProvider>
-            <StatusBar
-              translucent
-              backgroundColor="#17171780" // muted.900
-              barStyle="light-content"
-            />
-            <RootComponent />
+            <FlashCardProvider>
+              <StatusBar
+                translucent
+                backgroundColor="#17171780" // muted.900
+                barStyle="light-content"
+              />
+              <RootComponent />
+            </FlashCardProvider>
           </UserProvider>
         </ConfigProvider>
       </LoadingProvider>

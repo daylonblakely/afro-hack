@@ -7,6 +7,7 @@ import VerticalFeed from '../components/VerticalFeed';
 import Fab from '../components/Fab';
 import { MenuIconProps } from '../components/MenuIcon';
 import { useLoadingContext } from '../context/loading-context';
+import { useFlashCardContext } from '../context/flash-card-context';
 
 const HomeScreen = () => {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -16,7 +17,10 @@ const HomeScreen = () => {
   const {
     actions: { setIsLoading },
   } = useLoadingContext();
-  const [quotes, setQuotes] = useState<string[]>([]);
+  const {
+    state: cards,
+    actions: { getFlashCards },
+  } = useFlashCardContext();
 
   const menuIcons: MenuIconProps[] = [
     {
@@ -37,20 +41,9 @@ const HomeScreen = () => {
 
   // Fetching the quotes from an API
   useEffect(() => {
-    fetchQuotes();
+    setIsLoading(true);
+    getFlashCards(() => setIsLoading(false));
   }, []);
-
-  const fetchQuotes = async () => {
-    try {
-      setIsLoading(true);
-      await new Promise((f) => setTimeout(f, 3000));
-      const data = ['First Quote', 'Second Quote', 'Third Quote'];
-      setQuotes(data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching quotes:', error);
-    }
-  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -62,7 +55,7 @@ const HomeScreen = () => {
       </Box>
 
       {/* Swipeable quote box */}
-      {quotes.length ? <VerticalFeed items={quotes} /> : null}
+      {cards.length ? <VerticalFeed items={cards} /> : null}
 
       {/* Floating Action Button */}
       <Fab menuIcons={menuIcons} />

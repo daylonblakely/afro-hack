@@ -4,12 +4,13 @@ import {
   PanGestureHandler,
   HandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
+import { IPrompt } from '@afro-hack/types';
 import FlipCard from './FlipCard';
 
 const { height } = Dimensions.get('window');
 
 interface VerticalFeedProps {
-  items: string[];
+  items: IPrompt[];
 }
 
 const VerticalFeed = ({ items }: VerticalFeedProps) => {
@@ -90,8 +91,8 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
         }}
       >
         <FlipCard
-          frontText={items[currentIndex]}
-          backText={items[currentIndex]}
+          frontText={items[currentIndex].question}
+          backText={items[currentIndex].answer}
         />
       </Animated.View>
     </PanGestureHandler>

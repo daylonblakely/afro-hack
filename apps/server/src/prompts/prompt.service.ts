@@ -1,4 +1,10 @@
 import { ChatOpenAI } from '@langchain/openai';
+import { IUser } from '@afro-hack/types';
+import {
+  generateDevelopmentCardPrompt,
+  generateQuizPrompt,
+  generateQuotePrompt,
+} from './flash-card';
 
 const model = new ChatOpenAI({
   model: 'gpt-4o-mini',
@@ -28,4 +34,17 @@ export const getQuizQAndA = async () => {
   console.log(result);
 
   return result;
+};
+
+export const createUsersDailyPrompts = async (user: IUser) => {
+  const prompts = [
+    generateDevelopmentCardPrompt(user, []),
+    generateQuizPrompt(user, []),
+    generateQuotePrompt(user, []),
+  ];
+
+  for await (const prompt of prompts) {
+    console.log('---------------------');
+    console.log(prompt);
+  }
 };

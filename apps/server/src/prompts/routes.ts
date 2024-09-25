@@ -1,18 +1,22 @@
 import { Router, Request, Response } from 'express';
 import Prompt from './models/Prompt';
-import { getQuizQAndA } from './prompt.service';
+import { getQuizQAndA, createUsersDailyPrompts } from './prompt.service';
+import { findUserByEmail } from '../auth/auth.service';
 
 import { NotFoundError } from '../errors/not-found-error';
 
 const router = Router();
 
 router.get('/latest', async (req: Request, res: Response) => {
-  const latestPrompt = await Prompt.findOne().sort({ createdDate: -1 });
+  const user = await findUserByEmail(req.user.email);
+  const latestPrompts = await Prompt.find({ user: user.id })
+    .sort({ createdDate: -1 })
+    .limit(3);
 
-  if (!latestPrompt) {
-    throw new NotFoundError();
+  if (!latestPrompts.length) {
+    createUsersDailyPrompts(user);
   }
-  res.status(200).send(latestPrompt);
+  res.status(200).send(latestPrompts);
 });
 
 router.route('/').post(async (req: Request, res: Response) => {
