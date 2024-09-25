@@ -9,7 +9,9 @@ import {
   Select,
   CheckIcon,
   Radio,
-  Checkbox, // Import Checkbox
+  Checkbox,
+  Box,
+  ScrollView,
 } from 'native-base';
 import { useUserContext } from '../context/user-context';
 import { useSignupFlowConfigContext } from '../context/signup-config';
@@ -30,7 +32,7 @@ const SignupField = ({
 }) => {
   return (
     <>
-      <Text fontSize="xl" mb={4}>
+      <Text fontSize="2xl" mb={4} bold>
         {question}
       </Text>
       {type === 'text' && (
@@ -39,24 +41,27 @@ const SignupField = ({
           value={typeof value === 'string' ? value : ''}
           onChangeText={setValue as (value: string) => void}
           width="80%"
+          fontSize="xl"
         />
       )}
-      {type === 'dropdown' && (
+      {type === 'select' && (
         <Select
           selectedValue={typeof value === 'string' ? value : ''}
-          minWidth="200"
+          minWidth="300"
           placeholder="Choose an option"
           _selectedItem={{
             bg: 'primary.600',
             endIcon: <CheckIcon size="5" />,
           }}
           onValueChange={setValue as (value: string) => void}
+          fontSize="xl"
         >
           {options.map((option) => (
             <Select.Item
               label={option.option}
               value={option.option.toLowerCase()}
               key={option.option}
+              fontSize="xl"
             />
           ))}
         </Select>
@@ -66,6 +71,7 @@ const SignupField = ({
           name="radioGroup"
           value={typeof value === 'string' ? value : ''}
           onChange={(nextValue) => setValue(nextValue)}
+          fontSize="lg"
         >
           {options.map((option) => (
             <Radio key={option.option} value={option.option}>
@@ -75,16 +81,29 @@ const SignupField = ({
         </Radio.Group>
       )}
       {type === 'checkbox' && (
-        <Checkbox.Group
-          onChange={(selectedValues) => setValue(selectedValues || [])}
-          defaultValue={Array.isArray(value) ? value : []}
-        >
-          {options.map((option) => (
-            <Checkbox key={option.option} value={option.option}>
-              {option.option}
-            </Checkbox>
-          ))}
-        </Checkbox.Group>
+        <Box overflow="hidden" maxHeight="500" width="98%">
+          <ScrollView>
+            <Checkbox.Group
+              onChange={(selectedValues) => setValue(selectedValues || [])}
+              defaultValue={Array.isArray(value) ? value : []}
+            >
+              <Box
+                flexDirection="row"
+                flexWrap="wrap"
+                justifyContent="space-around"
+              >
+                {options.map((option) => (
+                  <Box width="43%" key={option.option} mb={2} flexShrink={1}>
+                    {/* Allow label wrapping */}
+                    <Checkbox value={option.option}>
+                      <Text>{option.option}</Text>
+                    </Checkbox>
+                  </Box>
+                ))}
+              </Box>
+            </Checkbox.Group>
+          </ScrollView>
+        </Box>
       )}
     </>
   );

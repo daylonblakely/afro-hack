@@ -14,7 +14,7 @@ const loadingReducer = (state: LoadingState, action: Actions) => {
 };
 
 const setIsLoading =
-  (dispatch: React.Dispatch<Actions>) => (isLoading: boolean) => {
+  (dispatch: React.Dispatch<Actions>) => async (isLoading: boolean) => {
     dispatch({ type: 'set_loading', payload: isLoading });
   };
 

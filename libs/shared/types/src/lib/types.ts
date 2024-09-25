@@ -6,7 +6,7 @@ export interface IPrompt {
   createdDate: Date;
 }
 
-export const UserAttributes = ['name', 'language', 'occupation'];
+export const UserAttributes = ['name', 'language', 'occupation']; // add rest..
 
 export type UserAttributesType = (typeof UserAttributes)[number];
 
