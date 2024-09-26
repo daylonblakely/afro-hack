@@ -69,7 +69,6 @@ const FlipCard = ({
 
     scrollRef.current?.scrollTo({
       y: 0,
-      animated: true,
     });
   }, [flipped, flipAnimation]);
 

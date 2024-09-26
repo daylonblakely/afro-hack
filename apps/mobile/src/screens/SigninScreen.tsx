@@ -14,6 +14,7 @@ import auth from '@react-native-firebase/auth';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { useUserContext } from '../context/user-context';
+import { storeUser } from '../app/async-storage';
 
 type Props = StackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -38,6 +39,8 @@ const SigninScreen = ({ navigation }: Props) => {
       );
       const user = userCredential.user;
       if (!user) throw new Error('Failed to get user');
+
+      await storeUser(data.idToken as string);
 
       await fetchUser(() => navigation.navigate('SignupSplash'));
     } catch (error) {

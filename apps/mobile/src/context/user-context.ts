@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import { IUser } from '@afro-hack/types';
 import createDataContext from './create-data-context';
 import server from '../api/server';
+import { removeUser } from '../app/async-storage';
 
 type UserState = IUser | null;
 type Actions = { type: string; payload: UserState };
@@ -44,6 +45,7 @@ const signOut = (dispatch: React.Dispatch<Actions>) => async () => {
   try {
     await GoogleSignin.signOut();
     await auth().signOut();
+    await removeUser();
     dispatch({ type: 'set_user', payload: null });
   } catch (error) {
     console.log('Error related to Google sign-in: ', error);

@@ -24,6 +24,7 @@ import SignupFlow from '../screens/SignupFlow';
 import SignupSplash from '../screens/SignupSplash';
 import HomeScreen from '../screens/HomeScreen';
 import LoadingOverlay from '../components/LoadingOverlay';
+import { getUser } from './async-storage'; // getUser to retrieve stored token
 
 GoogleSignin.configure({
   offlineAccess: true,
@@ -33,36 +34,46 @@ GoogleSignin.configure({
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const RootComponent = () => {
+const AppComponent = () => {
   const {
     state: appUser,
     actions: { fetchUser },
   } = useUserContext();
   const { state: isLoading } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
-  const [fireBaseUser, setFireBaseUser] =
-    useState<FirebaseAuthTypes.User | null>(null);
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
+  // This listener handles user authentication state
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
-    setFireBaseUser(user);
-
     if (initializing) setInitializing(false);
   };
 
   useEffect(() => {
-    if (fireBaseUser && !appUser) {
-      fetchUser().catch(() => {
-        console.log('error fetching user');
-      });
-    }
+    // Firebase authentication state listener
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    const checkLoginStatus = async () => {
+      try {
+        const credentials = await getUser();
+        if (credentials) {
+          // Sign in silently if token exists in storage
+          const googleCredential =
+            auth.GoogleAuthProvider.credential(credentials);
+          await auth().signInWithCredential(googleCredential);
+          await fetchUser(); // Fetch the user after successful sign-in
+        }
+      } catch (error) {
+        console.log('Error fetching user:', error);
+      }
+    };
+
+    checkLoginStatus();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,10 +97,9 @@ const RootComponent = () => {
         >
           {!appUser ? (
             <>
-              {/* // If no user is signed in, show the SignIn screen */}
+              {/* If no user is signed in, show the SignIn screen */}
               <Stack.Screen name="SignIn" component={SigninScreen} />
-              {/* // If the user is signed in but hasn't completed the sign-up flow,
-            show the Signup screens */}
+              {/* If the user is signed in but hasn't completed the sign-up flow, show the Signup screens */}
               <Stack.Screen name="SignupSplash" component={SignupSplash} />
               <Stack.Screen name="Signup" component={SignupFlow} />
             </>
@@ -115,7 +125,7 @@ const App = () => {
                 backgroundColor="#17171780" // muted.900
                 barStyle="light-content"
               />
-              <RootComponent />
+              <AppComponent />
             </FlashCardProvider>
           </UserProvider>
         </ConfigProvider>
@@ -123,4 +133,5 @@ const App = () => {
     </NativeBaseProvider>
   );
 };
+
 export default App;
