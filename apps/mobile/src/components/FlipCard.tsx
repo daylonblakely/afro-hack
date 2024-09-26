@@ -15,6 +15,10 @@ interface FlipCardProps {
   setFlipped: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+type ScrollViewRef = {
+  scrollTo: any;
+};
+
 const FlipCard = ({
   frontText,
   backText,
@@ -22,6 +26,7 @@ const FlipCard = ({
   setFlipped,
 }: FlipCardProps) => {
   const flipAnimation = useRef(new Animated.Value(0)).current;
+  const scrollRef = useRef<ScrollViewRef>(null);
   // const theme = useTheme();
 
   // Interpolate animation for flipping
@@ -61,6 +66,11 @@ const FlipCard = ({
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start();
+
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
   }, [flipped, flipAnimation]);
 
   return (
@@ -101,6 +111,7 @@ const FlipCard = ({
             contentContainerStyle={{ padding: 20 }}
             scrollEventThrottle={16}
             nestedScrollEnabled={true}
+            ref={scrollRef}
           >
             <Text fontSize="xl" textAlign="center" lineHeight="lg">
               {backText}
