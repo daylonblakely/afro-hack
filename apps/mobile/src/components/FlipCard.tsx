@@ -1,11 +1,5 @@
-import React, { useRef, useState, useCallback } from 'react';
-import {
-  Animated,
-  Easing,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  StyleSheet,
-} from 'react-native';
+import React, { useRef, useCallback, useEffect } from 'react';
+import { Animated, Easing, StyleSheet } from 'react-native';
 import { Box, Text, useTheme, ScrollView } from 'native-base';
 import {
   TapGestureHandler,
@@ -17,13 +11,18 @@ import {
 interface FlipCardProps {
   frontText?: string;
   backText?: string;
-  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  flipped: boolean;
+  setFlipped: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
-  const [flipped, setFlipped] = useState(false);
+const FlipCard = ({
+  frontText,
+  backText,
+  flipped,
+  setFlipped,
+}: FlipCardProps) => {
   const flipAnimation = useRef(new Animated.Value(0)).current;
-  const theme = useTheme();
+  // const theme = useTheme();
 
   // Interpolate animation for flipping
   const frontInterpolate = flipAnimation.interpolate({
@@ -48,18 +47,21 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
   const onDoubleTap = useCallback(
     ({ nativeEvent }: TapGestureHandlerGestureEvent) => {
       if (nativeEvent.state === State.ACTIVE) {
-        // toggle the flip state
-        Animated.timing(flipAnimation, {
-          toValue: flipped ? 0 : 180,
-          duration: 800,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: true,
-        }).start();
         setFlipped((prev) => !prev);
       }
     },
-    [flipped]
+    [setFlipped]
   );
+
+  useEffect(() => {
+    // toggle the flip state
+    Animated.timing(flipAnimation, {
+      toValue: flipped ? 180 : 0,
+      duration: 800,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [flipped, flipAnimation]);
 
   return (
     <TapGestureHandler onHandlerStateChange={onDoubleTap} numberOfTaps={2}>

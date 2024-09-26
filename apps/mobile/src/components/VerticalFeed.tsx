@@ -1,10 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
-import {
-  Dimensions,
-  Animated,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-} from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Dimensions, Animated } from 'react-native';
 import {
   PanGestureHandler,
   HandlerStateChangeEvent,
@@ -20,7 +15,7 @@ interface VerticalFeedProps {
 
 const VerticalFeed = ({ items }: VerticalFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [flipped, setFlipped] = useState(false);
 
   const opacity = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
@@ -57,20 +52,20 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
   ) => {
     const { translationY } = event.nativeEvent;
 
-    if (!isScrolling) {
-      if (
-        (translationY as number) < -height / 6 &&
-        currentIndex < items.length - 1
-      ) {
-        animateTransition('up');
-      } else if ((translationY as number) > height / 6 && currentIndex > 0) {
-        animateTransition('down');
-      } else {
-        Animated.spring(translateY, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start();
-      }
+    if (
+      (translationY as number) < -height / 6 &&
+      currentIndex < items.length - 1
+    ) {
+      animateTransition('up');
+      setFlipped(false);
+    } else if ((translationY as number) > height / 6 && currentIndex > 0) {
+      animateTransition('down');
+      setFlipped(false);
+    } else {
+      Animated.spring(translateY, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
     }
   };
 
@@ -79,20 +74,6 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
     {
       useNativeDriver: true,
     }
-  );
-
-  const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { contentOffset, contentSize, layoutMeasurement } =
-        event.nativeEvent;
-      const isScrollable =
-        contentSize.height > layoutMeasurement.height &&
-        contentOffset.y > 0 &&
-        contentOffset.y < contentSize.height - layoutMeasurement.height;
-
-      setIsScrolling(isScrollable);
-    },
-    []
   );
 
   return (
@@ -113,7 +94,8 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
         <FlipCard
           frontText={items[currentIndex].question}
           backText={items[currentIndex].answer}
-          onScroll={handleScroll}
+          flipped={flipped}
+          setFlipped={setFlipped}
         />
       </Animated.View>
     </PanGestureHandler>
