@@ -36,10 +36,22 @@ export const createUsersDailyPrompts = async (
   userId: string,
   user: IUser
 ): Promise<IPrompt[]> => {
+  // get recent prompts
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const recentPrompts: IPrompt[] = await Prompt.find({
+    user: userId,
+    createdDate: {
+      $lte: today,
+    },
+  })
+    .sort({ createdDate: -1 })
+    .limit(30); // last 10 days
+
   const prompts = [
-    generateDevelopmentCardPrompt(user, []),
-    generateQuizPrompt(user, []),
-    generateQuotePrompt(user, []),
+    generateDevelopmentCardPrompt(user, recentPrompts),
+    generateQuizPrompt(user, recentPrompts),
+    generateQuotePrompt(user, recentPrompts),
   ];
 
   const cards: IPrompt[] = [];

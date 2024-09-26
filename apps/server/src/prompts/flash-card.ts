@@ -27,6 +27,17 @@ function generateNestedAttributes(
     .join('\n');
 }
 
+function formatRecentQAndA(
+  recentResponses: { question: string; answer: string }[]
+) {
+  return recentResponses
+    .map(
+      (response) =>
+        `  - Question: ${response.question}\n    Answer: ${response.answer}`
+    )
+    .join('\n');
+}
+
 export const generateDevelopmentCardPrompt = (
   user: IUser,
   recentResponses: { question: string; answer: string }[]
@@ -47,12 +58,7 @@ export const generateDevelopmentCardPrompt = (
     })
     .join('\n');
 
-  const recentResponsesStr = recentResponses
-    .map(
-      (response) =>
-        `  - Question: ${response.question}\n    Answer: ${response.answer}`
-    )
-    .join('\n');
+  const recentResponsesStr = formatRecentQAndA(recentResponses);
 
   return `
   You are an AI language model tasked with generating personalized flash card questions and answers for users of a workforce development app. These flash cards should focus on helping underrepresented communities in tech.
@@ -75,7 +81,7 @@ export const generateDevelopmentCardPrompt = (
 
 export const generateQuizPrompt = (
   user: IUser,
-  recentQuizzes: { question: string; answer: string }[]
+  recentResponses: { question: string; answer: string }[]
 ): string => {
   const {
     name,
@@ -85,9 +91,7 @@ export const generateQuizPrompt = (
     personalInterests,
   } = user.attributes;
 
-  const recentQuizzesStr = recentQuizzes
-    .map((quiz) => `  - Question: ${quiz.question}\n    Answer: ${quiz.answer}`)
-    .join('\n');
+  const recentResponsesStr = formatRecentQAndA(recentResponses);
 
   return `
 You are an AI language model tasked with generating personalized quiz questions for users of a workforce development app. These questions should focus on testing the user's knowledge and skills in their selected field of interest. For example, if a person is interested in learning about interviews for a software engineering job, you might help them with an interview question that they might encounter.
@@ -100,7 +104,7 @@ Please create a quiz question for a user with the following attributes:
 - Personal Interests: ${(personalInterests as string[])?.join(', ')}
 
 Below is the history of recent quiz questions and answers to ensure no duplicate information is provided:
-${recentQuizzesStr}
+${recentResponsesStr}
 
 Make sure the question and answer are engaging, informative, relevant to the user's profile, and not duplicated from the recent quizzes. Lightly relate the answer to the user's personal interests if you see fit. This should be to help make a new topic more understandable. Use the years of experience to determine the level of simplification.
 
@@ -112,7 +116,7 @@ Answer: {generate a personalized answer based on the user's attributes}
 
 export const generateQuotePrompt = (
   user: IUser,
-  recentQuotes: { question: string; answer: string }[]
+  recentResponses: { question: string; answer: string }[]
 ): string => {
   const {
     name,
@@ -124,10 +128,7 @@ export const generateQuotePrompt = (
     personalInterests,
   } = user.attributes;
 
-  // Format recent quotes
-  const recentQuotesStr = recentQuotes
-    .map((quote) => `  - ${quote}`)
-    .join('\n');
+  const recentResponsesStr = formatRecentQAndA(recentResponses);
 
   return `
   You are an AI language model tasked with generating personalized quotes for users of a workforce development app. These quotes should focus on inspiring users to learn new skills, network with others, find a new job, etc. with a focus on quotes from marginalized communities but including all useful quotes.
@@ -142,7 +143,7 @@ export const generateQuotePrompt = (
   - Personal Interests: ${(personalInterests as string[])?.join(', ')}
   
   Below are the recently generated quotes:
-  ${recentQuotesStr}
+  ${recentResponsesStr}
   
   Make sure the quote is engaging, informative, relevant to the user's profile, and not duplicated from recent quotes. Also, be sure to include the source of the quote
   
