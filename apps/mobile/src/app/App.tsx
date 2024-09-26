@@ -23,13 +23,13 @@ import SigninScreen from '../screens/SigninScreen';
 import SignupFlow from '../screens/SignupFlow';
 import SignupSplash from '../screens/SignupSplash';
 import HomeScreen from '../screens/HomeScreen';
+import SplashScreen from '../screens/SplashScreen'; // New splash screen
 import LoadingOverlay from '../components/LoadingOverlay';
 import { getUser } from './async-storage'; // getUser to retrieve stored token
 
 GoogleSignin.configure({
   offlineAccess: true,
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-  //   iosClientId: '<replace with your iOS client ID>',
 });
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -41,10 +41,11 @@ const AppComponent = () => {
   } = useUserContext();
   const { state: isLoading } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
+  const [showSplash, setShowSplash] = useState(true); // New state for splash screen
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
-  // This listener handles user authentication state
+  // Listener to handle user authentication state
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
     if (initializing) setInitializing(false);
   };
@@ -61,7 +62,6 @@ const AppComponent = () => {
       try {
         const credentials = await getUser();
         if (credentials) {
-          // Sign in silently if token exists in storage
           const googleCredential =
             auth.GoogleAuthProvider.credential(credentials);
           await auth().signInWithCredential(googleCredential);
@@ -77,12 +77,8 @@ const AppComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (initializing) {
-    return (
-      <Center flex={1} bg={bgColor}>
-        <Spinner size="lg" />
-      </Center>
-    );
+  if (showSplash || initializing) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
   return (
