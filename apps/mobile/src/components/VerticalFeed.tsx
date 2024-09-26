@@ -96,7 +96,11 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
   );
 
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={handleSwipe}>
+    <PanGestureHandler
+      onGestureEvent={onGestureEvent}
+      onEnded={handleSwipe}
+      activeOffsetY={[-20, 20]}
+    >
       <Animated.View
         style={{
           transform: [{ translateY }],

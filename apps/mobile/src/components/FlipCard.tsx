@@ -11,6 +11,7 @@ import {
   TapGestureHandler,
   State,
   TapGestureHandlerGestureEvent,
+  gestureHandlerRootHOC,
 } from 'react-native-gesture-handler';
 
 interface FlipCardProps {
@@ -69,7 +70,6 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
           pointerEvents={flipped ? 'none' : 'auto'}
         >
           <ScrollView
-            // onScroll={onScroll} // Attach scroll handler
             scrollEventThrottle={16}
             style={{ flex: 1 }}
             contentContainerStyle={{
@@ -98,13 +98,9 @@ const FlipCard = ({ frontText, backText, onScroll }: FlipCardProps) => {
             style={{ flex: 1 }}
             contentContainerStyle={{ padding: 20 }}
             scrollEventThrottle={16}
+            nestedScrollEnabled={true}
           >
-            <Text
-              fontSize="xl"
-              // fontWeight="bold"
-              textAlign="center"
-              lineHeight="lg"
-            >
+            <Text fontSize="xl" textAlign="center" lineHeight="lg">
               {backText}
             </Text>
           </ScrollView>
@@ -131,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FlipCard;
+export default gestureHandlerRootHOC(FlipCard, { width: '100%' });
