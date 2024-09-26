@@ -9,13 +9,12 @@ import {
   Select,
   CheckIcon,
   Radio,
-  Checkbox,
-  Box,
   ScrollView,
 } from 'native-base';
 import { useUserContext } from '../context/user-context';
 import { useSignupFlowConfigContext } from '../context/signup-config';
 import { ISignupFlowConfig } from '@afro-hack/types';
+import CheckBoxGroup from '../components/CheckBoxGroup';
 
 const SignupField = ({
   question,
@@ -31,7 +30,7 @@ const SignupField = ({
   options?: ISignupFlowConfig['options'];
 }) => {
   return (
-    <>
+    <Center>
       <Text fontSize="2xl" mb={4} bold>
         {question}
       </Text>
@@ -81,31 +80,12 @@ const SignupField = ({
         </Radio.Group>
       )}
       {type === 'checkbox' && (
-        <Box overflow="hidden" maxHeight="500" width="98%">
-          <ScrollView>
-            <Checkbox.Group
-              onChange={(selectedValues) => setValue(selectedValues || [])}
-              defaultValue={Array.isArray(value) ? value : []}
-            >
-              <Box
-                flexDirection="row"
-                flexWrap="wrap"
-                justifyContent="space-around"
-              >
-                {options.map((option) => (
-                  <Box width="43%" key={option.option} mb={2} flexShrink={1}>
-                    {/* Allow label wrapping */}
-                    <Checkbox value={option.option}>
-                      <Text>{option.option}</Text>
-                    </Checkbox>
-                  </Box>
-                ))}
-              </Box>
-            </Checkbox.Group>
-          </ScrollView>
-        </Box>
+        <CheckBoxGroup
+          options={options.map(({ option }) => option)}
+          onSelectionChange={setValue}
+        />
       )}
-    </>
+    </Center>
   );
 };
 
@@ -133,16 +113,22 @@ const SignupPage = ({
 }) => {
   return (
     <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
-      <Center flexGrow={1}>
-        <SignupField
-          question={question}
-          value={value}
-          setValue={setValue}
-          type={type}
-          options={options}
-        />
-        {subSignupPage}
-      </Center>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+      >
+        <Center flexGrow={1} borderWidth={5}>
+          <SignupField
+            question={question}
+            value={value}
+            setValue={setValue}
+            type={type}
+            options={options}
+          />
+          {subSignupPage}
+        </Center>
+      </ScrollView>
 
       <Progress value={progress} width="80%" mb={4} />
       <Button onPress={onNext} isDisabled={disableContinue} width="80%">
@@ -231,6 +217,9 @@ const SignupFlow = () => {
       progress={progress}
       type={currentConfig.type}
       disableContinue={
+        !!(
+          Array.isArray(answers[currentStep]) && !answers[currentStep].length
+        ) ||
         !answers[currentStep] ||
         !!(
           selectedOption?.subOptions?.length &&
