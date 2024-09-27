@@ -19,7 +19,7 @@ const LoadingOverlay = ({ message }: { message?: string }) => {
       <VStack space={4} justifyContent="center" alignItems="center">
         <Spinner size="2xl" color="primary.500" />
         {message ? (
-          <Text fontSize="3xl" color="gray.500">
+          <Text fontSize="2xl" color="gray.500">
             {message}
           </Text>
         ) : null}

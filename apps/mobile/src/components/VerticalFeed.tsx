@@ -6,6 +6,7 @@ import {
 } from 'react-native-gesture-handler';
 import { IPrompt } from '@afro-hack/types';
 import FlipCard from './FlipCard';
+import { Box, VStack, useTheme } from 'native-base';
 
 const { height } = Dimensions.get('window');
 
@@ -19,6 +20,7 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
 
   const opacity = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
+  const theme = useTheme(); // Accessing NativeBase theme for color mode
 
   const animateTransition = (direction: 'up' | 'down') => {
     Animated.timing(opacity, {
@@ -76,29 +78,61 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
     }
   );
 
+  // Create the dots for the current position indicator using NativeBase Box
+  const renderDots = () => {
+    return items.map((_, index) => (
+      <Box
+        key={index}
+        bg={
+          index === currentIndex
+            ? theme.colors.primary[500]
+            : theme.colors.gray[300]
+        }
+        width={index === currentIndex ? 4 : 3}
+        height={index === currentIndex ? 4 : 3}
+        borderRadius="full"
+        my={1}
+      />
+    ));
+  };
+
   return (
-    <PanGestureHandler
-      onGestureEvent={onGestureEvent}
-      onEnded={handleSwipe}
-      activeOffsetY={[-20, 20]}
-    >
-      <Animated.View
-        style={{
-          transform: [{ translateY }],
-          opacity,
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+    <Box flex={1} position="relative">
+      <PanGestureHandler
+        onGestureEvent={onGestureEvent}
+        onEnded={handleSwipe}
+        activeOffsetY={[-20, 20]}
       >
-        <FlipCard
-          frontText={items[currentIndex].question}
-          backText={items[currentIndex].answer}
-          flipped={flipped}
-          setFlipped={setFlipped}
-        />
-      </Animated.View>
-    </PanGestureHandler>
+        <Animated.View
+          style={{
+            transform: [{ translateY }],
+            opacity,
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <FlipCard
+            frontText={items[currentIndex].question}
+            backText={items[currentIndex].answer}
+            flipped={flipped}
+            setFlipped={setFlipped}
+          />
+        </Animated.View>
+      </PanGestureHandler>
+
+      {/* Dots Indicator on the right side */}
+      <Box
+        position="absolute"
+        right={4}
+        top="50%"
+        // style={{ transform: [{ translateY: -height * 0.1 }] }} // Adjusting position without transform directly on VStack
+      >
+        <VStack justifyContent="center" alignItems="center" space={2}>
+          {renderDots()}
+        </VStack>
+      </Box>
+    </Box>
   );
 };
 

@@ -12,7 +12,7 @@ export const theme = extendTheme({
           return {
             _light: { backgroundColor: 'primary.600' },
             _dark: { backgroundColor: 'primary.400' },
-            width: '90%',
+            width: '80%',
             height: '75%',
             position: 'absolute',
             backfaceVisibility: 'hidden',

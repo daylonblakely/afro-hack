@@ -6,7 +6,6 @@ import {
   Spinner,
   Center,
   Text,
-  useColorMode,
   Circle,
 } from 'native-base';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -23,7 +22,6 @@ const SigninScreen = ({ navigation }: Props) => {
     actions: { fetchUser },
   } = useUserContext();
   const [loading, setLoading] = useState(false);
-  const { colorMode } = useColorMode();
 
   async function onGoogleButtonPress() {
     setLoading(true);

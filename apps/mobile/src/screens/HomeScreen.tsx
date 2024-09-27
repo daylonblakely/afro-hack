@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Text, useColorMode } from 'native-base';
+import React, { useEffect } from 'react';
+import { useColorMode } from 'native-base';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useUserContext } from '../context/user-context';
@@ -43,6 +43,7 @@ const HomeScreen = () => {
   useEffect(() => {
     setIsLoading(true, 'Fetching Your Daily Info...');
     getFlashCards(() => setIsLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
