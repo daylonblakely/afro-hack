@@ -10,7 +10,7 @@ export const theme = extendTheme({
       variants: {
         card: () => {
           return {
-            _light: { backgroundColor: 'primary.500' },
+            _light: { backgroundColor: 'primary.600' },
             _dark: { backgroundColor: 'primary.400' },
             width: '90%',
             height: '75%',
@@ -37,11 +37,21 @@ export const theme = extendTheme({
         },
       },
     },
+    Button: {
+      variants: {
+        onBg: () => {
+          return {
+            _light: { bg: '#F5F5F5' },
+            _dark: { bg: '#2A2A2A' },
+          };
+        },
+      },
+    },
   },
   backgroundColor: {
     dark: '#121212',
-    light: '#61cb66', //primary 400
-    // light: '#45b24d', //primary 400
+    // light: '#61cb66', //primary 400
+    light: '#45b24d', //primary 400
   },
   onBackgroundColor: {
     dark: '#2A2A2A',

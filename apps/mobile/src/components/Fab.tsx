@@ -18,7 +18,7 @@ const CustomFab = ({ menuIcons }: CustomFabProps) => {
   const theme = useTheme();
   const fabColor = useColorModeValue(
     theme.colors.secondary[400],
-    theme.colors.secondary[300]
+    theme.colors.secondary[400]
   );
   const { isOpen, onToggle } = useDisclose();
 
@@ -27,7 +27,7 @@ const CustomFab = ({ menuIcons }: CustomFabProps) => {
       <Fab
         position="absolute"
         size="md"
-        icon={<Icon as={MaterialIcons} name="menu" />}
+        icon={<Icon as={MaterialIcons} name="menu" size={'md'} />}
         placement="bottom-right"
         backgroundColor={fabColor}
         onPress={onToggle}

@@ -66,15 +66,15 @@ const SigninScreen = ({ navigation }: Props) => {
       {loading ? (
         <Center position="absolute" bottom={4}>
           <Spinner size="lg" />
-          <Text>Signing in...</Text>
         </Center>
       ) : (
         <Button
           position="absolute"
           bottom={4}
-          width="80%"
+          width="90%"
           onPress={onGoogleButtonPress}
-          bg="secondary.700"
+          variant={'onBg'}
+          borderRadius={20}
           leftIcon={
             <Image
               source={require('../../assets/google_logo.png')}
@@ -83,7 +83,7 @@ const SigninScreen = ({ navigation }: Props) => {
             />
           }
         >
-          <Text>Sign in with Google</Text>
+          <Text fontSize={'xl'}>Sign in with Google</Text>
         </Button>
       )}
     </VStack>
