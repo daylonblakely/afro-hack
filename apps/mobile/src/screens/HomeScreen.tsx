@@ -41,7 +41,7 @@ const HomeScreen = () => {
 
   // Fetching the quotes from an API
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true, 'Fetching Your Daily Info...');
     getFlashCards(() => setIsLoading(false));
   }, []);
 

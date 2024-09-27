@@ -1,7 +1,7 @@
 import React from 'react';
 import createDataContext from './create-data-context';
 
-type LoadingState = boolean;
+type LoadingState = { isLoading: boolean; message?: string };
 type Actions = { type: string; payload: LoadingState };
 
 const loadingReducer = (state: LoadingState, action: Actions) => {
@@ -14,12 +14,17 @@ const loadingReducer = (state: LoadingState, action: Actions) => {
 };
 
 const setIsLoading =
-  (dispatch: React.Dispatch<Actions>) => async (isLoading: boolean) => {
-    dispatch({ type: 'set_loading', payload: isLoading });
+  (dispatch: React.Dispatch<Actions>) =>
+  async (isLoading: boolean, message?: string) => {
+    dispatch({ type: 'set_loading', payload: { isLoading, message } });
   };
 
 export const {
   Provider,
   Context,
   useCustomContext: useLoadingContext,
-} = createDataContext<LoadingState>(loadingReducer, { setIsLoading }, false);
+} = createDataContext<LoadingState>(
+  loadingReducer,
+  { setIsLoading },
+  { isLoading: false }
+);

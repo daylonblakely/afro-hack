@@ -1,7 +1,7 @@
 import React from 'react';
 import { VStack, Spinner, Text, Center, useColorMode } from 'native-base';
 
-const LoadingOverlay = () => {
+const LoadingOverlay = ({ message }: { message?: string }) => {
   const { colorMode } = useColorMode();
 
   return (
@@ -17,10 +17,12 @@ const LoadingOverlay = () => {
       zIndex={1}
     >
       <VStack space={4} justifyContent="center" alignItems="center">
-        <Spinner size="lg" />
-        <Text fontSize="md" color="gray.500">
-          Loading...
-        </Text>
+        <Spinner size="2xl" color="primary.500" />
+        {message ? (
+          <Text fontSize="3xl" color="gray.500">
+            {message}
+          </Text>
+        ) : null}
       </VStack>
     </Center>
   );

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { VStack, Center, Text, Spinner, useColorMode } from 'native-base';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { useSignupFlowConfigContext } from '../context/signup-config';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 type Props = StackScreenProps<RootStackParamList, 'SignupSplash'>;
 
 const SignupSplash = ({ navigation }: Props) => {
-  const { colorMode } = useColorMode();
   const {
     actions: { fetchSignupFlowConfig },
   } = useSignupFlowConfigContext();
@@ -34,22 +33,7 @@ const SignupSplash = ({ navigation }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <Center flex={1} bg={colorMode === 'dark' ? 'black' : 'white'}>
-      <VStack space={4} justifyContent="center" alignItems="center">
-        {/* Loading Spinner */}
-        <Spinner size="lg" color="primary.500" />
-
-        {/* Informational Message */}
-        <Text
-          fontSize="xl"
-          color={colorMode === 'dark' ? 'gray.300' : 'gray.600'}
-        >
-          Let's get you signed up!
-        </Text>
-      </VStack>
-    </Center>
-  );
+  return <LoadingOverlay message="Let's get you signed up!" />;
 };
 
 export default SignupSplash;

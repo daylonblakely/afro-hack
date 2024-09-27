@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { NativeBaseProvider, Center, Spinner, useColorMode } from 'native-base';
+import { NativeBaseProvider, useColorMode } from 'native-base';
 
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { theme } from './theme';
@@ -39,7 +39,9 @@ const AppComponent = () => {
     state: appUser,
     actions: { fetchUser },
   } = useUserContext();
-  const { state: isLoading } = useLoadingContext();
+  const {
+    state: { isLoading, message },
+  } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
   const [showSplash, setShowSplash] = useState(true); // New state for splash screen
   const { colorMode } = useColorMode();
@@ -83,7 +85,7 @@ const AppComponent = () => {
 
   return (
     <>
-      {isLoading ? <LoadingOverlay /> : null}
+      {isLoading ? <LoadingOverlay message={message} /> : null}
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
