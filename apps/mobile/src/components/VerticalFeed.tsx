@@ -6,7 +6,7 @@ import {
 } from 'react-native-gesture-handler';
 import { IPrompt } from '@afro-hack/types';
 import FlipCard from './FlipCard';
-import { Box, VStack, useTheme } from 'native-base';
+import { Box, VStack, useTheme, useColorMode } from 'native-base';
 
 const { height } = Dimensions.get('window');
 
@@ -21,6 +21,7 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
   const opacity = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
   const theme = useTheme(); // Accessing NativeBase theme for color mode
+  const { colorMode } = useColorMode();
 
   const animateTransition = (direction: 'up' | 'down') => {
     Animated.timing(opacity, {
@@ -87,7 +88,7 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
           index === currentIndex
             ? flipped
               ? theme.colors.secondary[400]
-              : theme.colors.primary[500]
+              : theme.colors.primary[colorMode === 'dark' ? 500 : 600]
             : theme.colors.gray[300]
         }
         width={index === currentIndex ? 4 : 3}
