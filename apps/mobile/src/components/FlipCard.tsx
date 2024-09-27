@@ -94,9 +94,9 @@ const FlipCard = ({
           >
             <Text
               variant={'cardText'}
-              fontSize="3xl"
+              fontSize="2xl"
               fontWeight="bold"
-              lineHeight="md"
+              lineHeight="lg"
             >
               {frontText}
             </Text>
