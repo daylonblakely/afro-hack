@@ -24,11 +24,10 @@ const MenuIcon = ({
   return (
     <VStack alignItems="center">
       <IconButton
-        // mb="4"
         disabled={disabled}
         variant="solid"
         size={16}
-        colorScheme={bg.split('.')[0]} //color when pressed
+        bgColor={bg}
         borderRadius="full"
         onPress={onPress}
         icon={<MaterialIcons name={icon} size={32} color={lineColor} />}

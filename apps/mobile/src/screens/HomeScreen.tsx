@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
   const menuIcons: MenuIconProps[] = [
     {
-      bg: 'red.400',
+      bg: 'secondary.400',
       icon: 'dark-mode',
       text: colorMode === 'dark' ? 'Light Mode' : 'Dark Mode',
       onPress: toggleColorMode,

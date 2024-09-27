@@ -4,7 +4,6 @@ import {
   Modal,
   useColorMode,
   VStack,
-  Box,
   Center,
   Text,
   HStack,
@@ -30,12 +29,7 @@ const StaggerModal = ({ isOpen, onToggle, children }: StaggerModalProps) => {
     >
       <VStack flex={1} padding={4}>
         <Center flexGrow={2}>
-          <Text
-            fontSize={'2xl'}
-            textAlign={'center'}
-            color={colorMode === 'dark' ? 'white' : 'black'}
-            fontWeight={'medium'}
-          >
+          <Text fontSize={'2xl'} textAlign={'center'} fontWeight={'semibold'}>
             Welcome to{' '}
             <Text
               color={colorMode === 'dark' ? 'primary.400' : 'primary.600'}
@@ -50,12 +44,7 @@ const StaggerModal = ({ isOpen, onToggle, children }: StaggerModalProps) => {
             future together!
           </Text>
           <Divider mt={4} />
-          <Text
-            fontSize={'xl'}
-            mt={4}
-            color={colorMode === 'dark' ? 'white' : 'black'}
-            fontWeight={'medium'}
-          >
+          <Text fontSize={'xl'} mt={4} fontWeight={'medium'}>
             <Text
               color={colorMode === 'dark' ? 'primary.400' : 'primary.600'}
               bold
