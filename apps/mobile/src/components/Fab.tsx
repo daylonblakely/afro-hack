@@ -17,8 +17,8 @@ interface CustomFabProps {
 const CustomFab = ({ menuIcons }: CustomFabProps) => {
   const theme = useTheme();
   const fabColor = useColorModeValue(
-    theme.colors.primary[500],
-    theme.colors.primary[300]
+    theme.colors.secondary[400],
+    theme.colors.secondary[300]
   );
   const { isOpen, onToggle } = useDisclose();
 
@@ -29,7 +29,7 @@ const CustomFab = ({ menuIcons }: CustomFabProps) => {
         size="md"
         icon={<Icon as={MaterialIcons} name="menu" />}
         placement="bottom-right"
-        color={fabColor}
+        backgroundColor={fabColor}
         onPress={onToggle}
       ></Fab>
       <StaggerModal isOpen={isOpen} onToggle={onToggle}>

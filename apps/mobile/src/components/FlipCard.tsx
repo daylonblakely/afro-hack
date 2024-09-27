@@ -1,19 +1,12 @@
 import React, { useRef, useCallback, useEffect } from 'react';
-import { Animated, Easing, StyleSheet } from 'react-native';
-import {
-  Box,
-  Text,
-  useTheme,
-  ScrollView,
-  useColorModeValue,
-} from 'native-base';
+import { Animated, Easing } from 'react-native';
+import { Box, Text, ScrollView } from 'native-base';
 import {
   TapGestureHandler,
   State,
   TapGestureHandlerGestureEvent,
   gestureHandlerRootHOC,
 } from 'react-native-gesture-handler';
-import { theme } from '../app/theme';
 
 interface FlipCardProps {
   frontText?: string;
@@ -26,6 +19,8 @@ type ScrollViewRef = {
   scrollTo: any;
 };
 
+const AnimatedBox = Animated.createAnimatedComponent(Box);
+
 const FlipCard = ({
   frontText,
   backText,
@@ -34,10 +29,6 @@ const FlipCard = ({
 }: FlipCardProps) => {
   const flipAnimation = useRef(new Animated.Value(0)).current;
   const scrollRef = useRef<ScrollViewRef>(null);
-  const cardBg = useColorModeValue(
-    theme.onBackgroundColor.light,
-    theme.onBackgroundColor.dark
-  );
 
   // Interpolate animation for flipping
   const frontInterpolate = flipAnimation.interpolate({
@@ -86,15 +77,9 @@ const FlipCard = ({
     <TapGestureHandler onHandlerStateChange={onDoubleTap} numberOfTaps={2}>
       <Box alignItems="center" justifyContent="center" flex={1} padding={4}>
         {/* Front of the card */}
-        <Animated.View
-          style={[
-            styles.cardStyle,
-            frontAnimatedStyle,
-            {
-              backgroundColor: cardBg,
-              borderColor: theme.colors.primary[400],
-            },
-          ]}
+        <AnimatedBox
+          style={frontAnimatedStyle}
+          variant={'card'}
           pointerEvents={flipped ? 'none' : 'auto'}
         >
           <ScrollView
@@ -107,26 +92,20 @@ const FlipCard = ({
             }}
           >
             <Text
-              fontSize="2xl"
+              variant={'cardText'}
+              fontSize="3xl"
               fontWeight="bold"
-              textAlign="center"
-              lineHeight="lg"
+              lineHeight="md"
             >
               {frontText}
             </Text>
           </ScrollView>
-        </Animated.View>
+        </AnimatedBox>
 
         {/* Back of the card */}
-        <Animated.View
-          style={[
-            styles.cardStyle,
-            backAnimatedStyle,
-            {
-              backgroundColor: cardBg,
-              borderColor: theme.colors.secondary[400],
-            },
-          ]}
+        <AnimatedBox
+          style={backAnimatedStyle}
+          variant={'card'}
           pointerEvents={flipped ? 'auto' : 'none'}
         >
           <ScrollView
@@ -136,31 +115,19 @@ const FlipCard = ({
             nestedScrollEnabled={true}
             ref={scrollRef}
           >
-            <Text fontSize="xl" textAlign="center" lineHeight="xl">
+            <Text
+              variant={'cardText'}
+              fontSize="2xl"
+              lineHeight="lg"
+              fontWeight="medium"
+            >
               {backText}
             </Text>
           </ScrollView>
-        </Animated.View>
+        </AnimatedBox>
       </Box>
     </TapGestureHandler>
   );
 };
-
-// Extract static styles using StyleSheet.create
-const styles = StyleSheet.create({
-  cardStyle: {
-    width: '90%',
-    height: '70%',
-    position: 'absolute',
-    backfaceVisibility: 'hidden',
-    // borderWidth: 2,
-    borderRadius: 10,
-
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-  },
-});
 
 export default gestureHandlerRootHOC(FlipCard, { width: '100%' });

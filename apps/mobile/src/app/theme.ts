@@ -5,10 +5,43 @@ export const theme = extendTheme({
     initialColorMode: 'dark', // Default to dark mode
     useSystemColorMode: false,
   },
-
+  components: {
+    Box: {
+      variants: {
+        card: () => {
+          return {
+            _light: { backgroundColor: 'primary.500' },
+            _dark: { backgroundColor: 'primary.400' },
+            width: '90%',
+            height: '75%',
+            position: 'absolute',
+            backfaceVisibility: 'hidden',
+            // borderWidth: 2,
+            borderRadius: 10,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.8,
+            shadowRadius: 5,
+          };
+        },
+      },
+    },
+    Text: {
+      variants: {
+        cardText: () => {
+          return {
+            _light: { color: 'white' },
+            _dark: { color: 'black' },
+            textAlign: 'center',
+          };
+        },
+      },
+    },
+  },
   backgroundColor: {
     dark: '#121212',
-    light: '#FFFFFF',
+    light: '#61cb66', //primary 400
+    // light: '#45b24d', //primary 400
   },
   onBackgroundColor: {
     dark: '#2A2A2A',
