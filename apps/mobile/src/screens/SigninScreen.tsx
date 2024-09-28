@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Dimensions } from 'react-native';
 import {
   VStack,
   Button,
@@ -7,6 +8,8 @@ import {
   Center,
   Text,
   Circle,
+  HStack,
+  Box,
 } from 'native-base';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
@@ -14,6 +17,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { useUserContext } from '../context/user-context';
 import { storeUser } from '../app/async-storage';
+import { TITLE } from '../app/config';
 
 type Props = StackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -22,6 +26,7 @@ const SigninScreen = ({ navigation }: Props) => {
     actions: { fetchUser },
   } = useUserContext();
   const [loading, setLoading] = useState(false);
+  const screenHeight = Dimensions.get('window').height;
 
   async function onGoogleButtonPress() {
     setLoading(true);
@@ -48,17 +53,41 @@ const SigninScreen = ({ navigation }: Props) => {
     }
   }
 
+  const titleArray = '<,B,a,c,k,e,n,d,/>'.split(',');
+
   return (
     <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
       {/* Logo in the center */}
-      <VStack flexGrow={1} justifyContent="center">
+      {/* <VStack flexGrow={1} justifyContent="center">
         <Circle size="2xl" bg="primary.500">
           {/* Replace 'Logo' with your actual Image component */}
-          <Text color="white" fontSize="2xl">
+      {/* <Text color="white" fontSize="2xl">
             Logo
           </Text>
-        </Circle>
-      </VStack>
+        </Circle> 
+      // </VStack> */}
+
+      {/* <Center flexGrow={1}> */}
+      {/* <VStack
+        space={'flex'}
+        backgroundColor={'red.800'}
+        // position={'absolute'}
+        // right={8}
+        // top={8}
+      > */}
+      {/* Negative space to overlap vertically */}
+      <Center position="absolute" flexGrow={1} left={4} top={8}>
+        {titleArray.map((letter, index) => (
+          <Text
+            key={index}
+            fontSize={'5xl'}
+            fontWeight="bold"
+            color={'primary.300'}
+          >
+            {letter}
+          </Text>
+        ))}
+      </Center>
 
       {/* Google Sign In Button at the bottom */}
       {loading ? (

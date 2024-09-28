@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useColorMode } from 'native-base';
+import { useColorMode, Box, Text } from 'native-base';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useUserContext } from '../context/user-context';
@@ -8,6 +8,7 @@ import Fab from '../components/Fab';
 import { MenuIconProps } from '../components/MenuIcon';
 import { useLoadingContext } from '../context/loading-context';
 import { useFlashCardContext } from '../context/flash-card-context';
+import { TITLE } from '../app/config';
 
 const HomeScreen = () => {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -49,11 +50,11 @@ const HomeScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* App Title at the Top */}
-      {/* <Box safeAreaTop alignItems="center">
-        <Text fontSize="2xl" fontWeight="bold">
-          QuoteApp
+      <Box safeAreaTop alignItems="center" position={'absolute'} mt={4} ml={8}>
+        <Text fontSize="4xl" bold color={'white'}>
+          {TITLE}
         </Text>
-      </Box> */}
+      </Box>
 
       {/* Swipeable quote box */}
       {cards.length ? <VerticalFeed items={cards} /> : null}

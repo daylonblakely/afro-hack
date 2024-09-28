@@ -9,6 +9,7 @@ import {
   HStack,
   Divider,
 } from 'native-base';
+import { TITLE } from '../app/config';
 
 interface StaggerModalProps {
   isOpen: boolean;
@@ -35,8 +36,9 @@ const StaggerModal = ({ isOpen, onToggle, children }: StaggerModalProps) => {
               color={colorMode === 'dark' ? 'primary.400' : 'primary.600'}
               bold
             >
-              InspireMe!
-            </Text>{' '}
+              {TITLE}
+            </Text>
+            {'. '}
             Your personalized hub for uplifting and tailored insights on
             leveling up in the tech industry. Whether you're looking for
             motivation or guidance on your career journey, we're here to inspire
