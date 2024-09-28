@@ -87,7 +87,7 @@ const VerticalFeed = ({ items }: VerticalFeedProps) => {
         bg={
           index === currentIndex
             ? flipped
-              ? theme.colors.secondary[400]
+              ? theme.colors.secondary[colorMode === 'dark' ? 400 : 500]
               : theme.colors.primary[colorMode === 'dark' ? 600 : 600]
             : theme.colors.gray[300]
         }

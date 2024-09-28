@@ -78,9 +78,9 @@ const AppComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (showSplash) {
-    return <SplashScreen onFinish={() => setShowSplash(false)} />;
-  }
+  // if (showSplash) {
+  //   return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  // }
 
   return (
     <>
@@ -97,10 +97,6 @@ const AppComponent = () => {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            cardStyle: {
-              // backgroundColor: 'transparent',
-            },
-            // presentation: 'transparentModal',
           }}
         >
           {!appUser ? (

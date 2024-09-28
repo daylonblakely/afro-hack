@@ -1,23 +1,11 @@
 import React, { useState } from 'react';
-import { Dimensions } from 'react-native';
-import {
-  VStack,
-  Button,
-  Image,
-  Spinner,
-  Center,
-  Text,
-  Circle,
-  HStack,
-  Box,
-} from 'native-base';
+import { VStack, Button, Image, Spinner, Center, Text } from 'native-base';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { useUserContext } from '../context/user-context';
 import { storeUser } from '../app/async-storage';
-import { TITLE } from '../app/config';
 
 type Props = StackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -26,7 +14,6 @@ const SigninScreen = ({ navigation }: Props) => {
     actions: { fetchUser },
   } = useUserContext();
   const [loading, setLoading] = useState(false);
-  const screenHeight = Dimensions.get('window').height;
 
   async function onGoogleButtonPress() {
     setLoading(true);
@@ -67,6 +54,8 @@ const SigninScreen = ({ navigation }: Props) => {
           width="90%"
           onPress={onGoogleButtonPress}
           variant={'onBg'}
+          borderWidth={2}
+          borderColor={'primary.500'}
           borderRadius={20}
           leftIcon={
             <Image

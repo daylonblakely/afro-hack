@@ -17,7 +17,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   }, [onFinish]);
 
   return (
-    <Center flex={1} bg={bgColor}>
+    <Center flex={1}>
       {/* <Image source={AppLogo} alt="App Logo" size="xl" /> */}
       <Text>splash</Text>
       <Spinner size="lg" mt={6} />

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Fab,
-  Icon,
-  useTheme,
-  useDisclose,
-  useColorModeValue,
-} from 'native-base';
+import { Fab, Icon, useDisclose, useColorModeValue } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import StaggerModal from './StaggerModal';
 import MenuIcon, { MenuIconProps } from './MenuIcon';
@@ -15,11 +9,7 @@ interface CustomFabProps {
 }
 
 const CustomFab = ({ menuIcons }: CustomFabProps) => {
-  const theme = useTheme();
-  const fabColor = useColorModeValue(
-    theme.colors.secondary[500],
-    theme.colors.secondary[500]
-  );
+  const fabColor = useColorModeValue('secondary.500', 'secondary.400');
   const { isOpen, onToggle } = useDisclose();
 
   return (
