@@ -78,13 +78,13 @@ const AppComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (showSplash || initializing) {
+  if (showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
   return (
     <>
-      {isLoading ? <LoadingOverlay message={message} /> : null}
+      {isLoading || initializing ? <LoadingOverlay message={message} /> : null}
       <NavigationContainer
         theme={{
           ...DefaultTheme,
