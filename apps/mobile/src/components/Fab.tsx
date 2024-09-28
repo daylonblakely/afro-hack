@@ -17,8 +17,8 @@ interface CustomFabProps {
 const CustomFab = ({ menuIcons }: CustomFabProps) => {
   const theme = useTheme();
   const fabColor = useColorModeValue(
-    theme.colors.secondary[400],
-    theme.colors.secondary[400]
+    theme.colors.secondary[500],
+    theme.colors.secondary[500]
   );
   const { isOpen, onToggle } = useDisclose();
 

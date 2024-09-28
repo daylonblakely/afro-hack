@@ -11,7 +11,7 @@ export const theme = extendTheme({
         card: () => {
           return {
             _light: { backgroundColor: 'primary.600' },
-            _dark: { backgroundColor: 'primary.400' },
+            _dark: { backgroundColor: 'primary.500' },
             width: '80%',
             height: '75%',
             position: 'absolute',

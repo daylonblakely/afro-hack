@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, useColorMode, useColorModeValue, useToken } from 'native-base';
+import {
+  Center,
+  useColorMode,
+  useColorModeValue,
+  useToken,
+  VStack,
+  HStack,
+  Text,
+} from 'native-base';
 import { theme } from '../app/theme';
 import Svg, { SvgXml } from 'react-native-svg';
 
@@ -7,7 +15,7 @@ const Background = () => {
   const { colorMode } = useColorMode();
   const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
-  const color = useColorModeValue('secondary.400', 'secondary.400');
+  const color = useColorModeValue('secondary.300', 'secondary.300');
   const fillColor = useToken('colors', color);
 
   const xml = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
@@ -17,9 +25,11 @@ const Background = () => {
 <path d="M0 0 C1.32 1.32 2.64 2.64 4 4 C2.52307692 8.67692308 2.52307692 8.67692308 -0.125 10.3125 C-1.053125 10.6528125 -1.053125 10.6528125 -2 11 C-2 8 -2 8 -1 7 C-0.63239269 4.67182036 -0.29758419 2.3381615 0 0 Z " fill="${fillColor}" transform="translate(832,383)" data-index="3" style="visibility: visible;"></path>
 </svg>`;
 
+  const titleArray = '<,B,a,c,k,e,n,d,/>'.split(',');
+
   return (
-    <Box
-      flex={1}
+    <Center
+      //   flex={1}
       backgroundColor={bgColor}
       position={'absolute'}
       h="100%"
@@ -28,7 +38,39 @@ const Background = () => {
       <Svg height="100%" width="100%" viewBox="0 0 380 920">
         <SvgXml xml={xml} />
       </Svg>
-    </Box>
+      <VStack
+        flexGrow={1}
+        padding={4}
+        alignSelf={'flex-start'}
+        height={'100%'}
+        width={'75%'}
+        position={'absolute'}
+        justifyContent={'space-evenly'}
+      >
+        {titleArray.map((letter, index) => (
+          <HStack
+            key={index}
+            padding={0}
+            alignItems={'center'}
+            position={'relative'}
+          >
+            <Text
+              key={index}
+              fontSize={'8xl'}
+              position={'absolute'}
+              left={`${index * titleArray.length}%`}
+              fontWeight={'extrabold'}
+              color={'primary.300'}
+              margin={0}
+              padding={0}
+              lineHeight={'2xs'}
+            >
+              {letter}
+            </Text>
+          </HStack>
+        ))}
+      </VStack>
+    </Center>
   );
 };
 
