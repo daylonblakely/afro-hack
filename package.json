@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:dev": "concurrently \"npx nx run mobile:android\" \"npx nx run server:serve-nodemon\"",
-    "start:api": "npx nx run server:serve-nodemon"
+    "start:api": "npx nx run server:serve-nodemon",
+    "start:android": "npx nx run mobile:android"
   },
   "private": true,
   "dependencies": {

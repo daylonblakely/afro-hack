@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { NativeBaseProvider, useColorMode } from 'native-base';
+import { NativeBaseProvider } from 'native-base';
 
 import { RootStackParamList } from '../types/root-stack-param-list';
 import { theme } from './theme';
@@ -18,6 +18,8 @@ import {
 } from '../context/loading-context';
 import { Provider as ConfigProvider } from '../context/signup-config';
 import { Provider as FlashCardProvider } from '../context/flash-card-context';
+import { getUser } from './async-storage'; // getUser to retrieve stored token
+import Background from '../components/Background';
 
 import SigninScreen from '../screens/SigninScreen';
 import SignupFlow from '../screens/SignupFlow';
@@ -25,7 +27,6 @@ import SignupSplash from '../screens/SignupSplash';
 import HomeScreen from '../screens/HomeScreen';
 import SplashScreen from '../screens/SplashScreen'; // New splash screen
 import LoadingOverlay from '../components/LoadingOverlay';
-import { getUser } from './async-storage'; // getUser to retrieve stored token
 
 GoogleSignin.configure({
   offlineAccess: true,
@@ -44,8 +45,6 @@ const AppComponent = () => {
   } = useLoadingContext();
   const [initializing, setInitializing] = useState(true);
   const [showSplash, setShowSplash] = useState(true); // New state for splash screen
-  const { colorMode } = useColorMode();
-  const bgColor = theme.backgroundColor[colorMode || 'dark'];
 
   // Listener to handle user authentication state
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
@@ -86,11 +85,22 @@ const AppComponent = () => {
   return (
     <>
       {isLoading ? <LoadingOverlay message={message} /> : null}
-      <NavigationContainer>
+      <NavigationContainer
+        theme={{
+          ...DefaultTheme,
+          colors: {
+            ...DefaultTheme.colors,
+            background: 'transparent',
+          },
+        }}
+      >
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            cardStyle: { backgroundColor: bgColor },
+            cardStyle: {
+              // backgroundColor: 'transparent',
+            },
+            // presentation: 'transparentModal',
           }}
         >
           {!appUser ? (
@@ -123,6 +133,7 @@ const App = () => {
                 backgroundColor="#17171780" // muted.900
                 barStyle="light-content"
               />
+              <Background />
               <AppComponent />
             </FlashCardProvider>
           </UserProvider>

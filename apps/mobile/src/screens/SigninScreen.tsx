@@ -58,24 +58,37 @@ const SigninScreen = ({ navigation }: Props) => {
   return (
     <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
       {/* Logo in the center */}
-      {/* <VStack flexGrow={1} justifyContent="center">
-        <Circle size="2xl" bg="primary.500">
+      <VStack flexGrow={1} justifyContent={'space-around'} paddingBottom={36}>
+        <Circle
+          size="lg"
+          // bg="white"
+          borderColor={'white'}
+          borderWidth={2}
+          alignSelf={'flex-end'}
+          left={16}
+        >
           {/* Replace 'Logo' with your actual Image component */}
-      {/* <Text color="white" fontSize="2xl">
+          {/* <Box flexWrap={'wrap'} alignSelf={'flex-end'} width={'40%'}> */}
+          <Text color="white" fontSize="xl" bold>
+            "Learn"
+          </Text>
+          {/* </Box> */}
+        </Circle>
+        <Circle size="2xl" bg="primary.400">
+          {/* Replace 'Logo' with your actual Image component */}
+          <Text color="white" fontSize="2xl">
             Logo
           </Text>
-        </Circle> 
-      // </VStack> */}
+        </Circle>
+        <Circle size="lg" bg="secondary.400" alignSelf={'flex-end'}>
+          {/* Replace 'Logo' with your actual Image component */}
+          <Text color="white" fontSize="2xl">
+            Logo
+          </Text>
+        </Circle>
+      </VStack>
 
-      {/* <Center flexGrow={1}> */}
-      {/* <VStack
-        space={'flex'}
-        backgroundColor={'red.800'}
-        // position={'absolute'}
-        // right={8}
-        // top={8}
-      > */}
-      {/* Negative space to overlap vertically */}
+      {/* display vertically */}
       <Center position="absolute" flexGrow={1} left={4} top={8}>
         {titleArray.map((letter, index) => (
           <Text
