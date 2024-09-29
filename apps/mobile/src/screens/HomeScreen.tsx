@@ -40,7 +40,7 @@ const HomeScreen = () => {
 
   // Fetching the quotes from an API
   useEffect(() => {
-    setIsLoading(true, 'Fetching Your Daily Info...');
+    setIsLoading(true, 'Fetching Your Daily Insights...');
     getFlashCards(() => setIsLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

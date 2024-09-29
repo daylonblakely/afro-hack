@@ -31,16 +31,19 @@ const SignupField = ({
 }) => {
   return (
     <Center>
-      <Text fontSize="2xl" mb={4} bold>
+      <Text fontSize="3xl" mb={4} bold textAlign={'center'}>
         {question}
       </Text>
       {type === 'text' && (
         <Input
           placeholder="Enter your answer"
+          placeholderTextColor={'gray.300'}
+          borderColor={'gray.300'}
           value={typeof value === 'string' ? value : ''}
           onChangeText={setValue as (value: string) => void}
           width="80%"
-          fontSize="xl"
+          fontSize="2xl"
+          borderWidth={2}
         />
       )}
       {type === 'select' && (
@@ -48,12 +51,15 @@ const SignupField = ({
           selectedValue={typeof value === 'string' ? value : ''}
           minWidth="300"
           placeholder="Choose an option"
+          placeholderTextColor={'gray.300'}
+          borderColor={'gray.300'}
           _selectedItem={{
             bg: 'primary.600',
             endIcon: <CheckIcon size="5" />,
           }}
           onValueChange={setValue as (value: string) => void}
-          fontSize="xl"
+          fontSize="2xl"
+          borderWidth={2}
         >
           {options.map((option) => (
             <Select.Item
@@ -112,13 +118,21 @@ const SignupPage = ({
   subSignupPage?: React.ReactNode;
 }) => {
   return (
-    <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
+    <VStack
+      flex={1}
+      padding={4}
+      paddingTop={12}
+      justifyContent="center"
+      alignItems="center"
+      backgroundColor={'rgba(0, 0, 0, 0.3)'}
+    >
       <ScrollView
+        width={'100%'}
         contentContainerStyle={{
           flexGrow: 1,
         }}
       >
-        <Center flexGrow={1} borderWidth={5}>
+        <Center flexGrow={1}>
           <SignupField
             question={question}
             value={value}

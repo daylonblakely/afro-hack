@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { VStack, Button, Image, Spinner, Center, Text } from 'native-base';
+import { Button, Image, Spinner, Center, Text, Modal } from 'native-base';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -14,6 +14,7 @@ const SigninScreen = ({ navigation }: Props) => {
     actions: { fetchUser },
   } = useUserContext();
   const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(true);
 
   async function onGoogleButtonPress() {
     setLoading(true);
@@ -32,6 +33,7 @@ const SigninScreen = ({ navigation }: Props) => {
 
       await storeUser(data.idToken as string);
 
+      setModalOpen(false);
       await fetchUser(() => navigation.navigate('SignupSplash'));
     } catch (error) {
       console.error(error);
@@ -41,34 +43,45 @@ const SigninScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <VStack flex={1} padding={4} justifyContent="center" alignItems="center">
-      {/* Google Sign In Button at the bottom */}
-      {loading ? (
-        <Center position="absolute" bottom={4}>
-          <Spinner size="lg" />
-        </Center>
-      ) : (
-        <Button
-          position="absolute"
-          bottom={4}
-          width="90%"
-          onPress={onGoogleButtonPress}
-          variant={'onBg'}
-          borderWidth={2}
-          borderColor={'primary.500'}
-          borderRadius={20}
-          leftIcon={
-            <Image
-              source={require('../../assets/google_logo.png')}
-              alt="Google"
-              size="xs"
-            />
-          }
-        >
-          <Text fontSize={'xl'}>Sign in with Google</Text>
-        </Button>
-      )}
-    </VStack>
+    <Modal isOpen={modalOpen} size={'xl'}>
+      <Modal.Content>
+        <Modal.Header alignItems={'center'}>
+          <Text fontSize={'4xl'} bold>
+            Welcome!
+          </Text>
+        </Modal.Header>
+        <Modal.Body alignItems={'center'}>
+          <Text fontSize={'2xl'}>
+            Sign in to access your personalized insights!
+          </Text>
+        </Modal.Body>
+        <Modal.Footer>
+          {loading ? (
+            <Center flex={1}>
+              <Spinner size="lg" />
+            </Center>
+          ) : (
+            <Button
+              flex={1}
+              onPress={onGoogleButtonPress}
+              variant={'onBg'}
+              borderWidth={2}
+              borderColor={'primary.500'}
+              borderRadius={20}
+              leftIcon={
+                <Image
+                  source={require('../../assets/google_logo.png')}
+                  alt="Google"
+                  size="xs"
+                />
+              }
+            >
+              <Text fontSize={'xl'}>Sign in with Google</Text>
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
   );
 };
 
