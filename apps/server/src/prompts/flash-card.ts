@@ -61,7 +61,7 @@ export const generateDevelopmentCardPrompt = (
   const recentResponsesStr = formatRecentQAndA(recentResponses);
 
   return `
-  You are an AI language model tasked with generating personalized flash card questions and answers for users of a workforce development app. These flash cards should focus on helping underrepresented communities in tech.
+  You are an AI language model tasked with generating personalized flash card questions and answers for users of a workforce development app. These flash cards should focus on helping people from marginalized communities in the tech industry.
   Depending on the user's level of experience and background that can mean a lot of things. Some people may need tips about what the field they are interested in does and roles within that field. Others may be interested how to navigate the industry or how to grow in their career.
   Keep the information fresh and engaging. Try not to bore the user with information that has been previously presented to them. The goal is to spark ideas.
   

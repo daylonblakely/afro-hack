@@ -6,10 +6,12 @@ import {
   generateQuotePrompt,
 } from './flash-card';
 import Prompt from './models/Prompt';
+import { config } from '../config';
 
 const model = new ChatOpenAI({
   model: 'gpt-4o-mini',
   temperature: 0,
+  apiKey: config.openAiApiKey,
 });
 
 const getQuizQAndA = async (prompt: string) => {

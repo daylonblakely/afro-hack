@@ -1,16 +1,14 @@
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import admin from 'firebase-admin';
 import app from './app';
-
-dotenv.config();
+import { config } from './config';
 
 const port = process.env.PORT || 5000;
 
 admin.initializeApp({ credential: admin.credential.applicationDefault() });
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(config.dbUrl)
   .then(() => {
     console.log('Connected to MongoDB');
   })
