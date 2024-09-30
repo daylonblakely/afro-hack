@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import morgan from 'morgan';
 import 'express-async-errors';
 import { json } from 'body-parser';
+import cors from 'cors';
 import { NotFoundError } from './errors/not-found-error';
 
 import promptRouter from './prompts/routes';
@@ -13,6 +14,8 @@ import { verifyToken } from './auth/middlewares/verify-token';
 const app = express();
 
 app.use(morgan('combined'));
+
+app.use(cors());
 
 app.use(json());
 
